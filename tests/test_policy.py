@@ -20,6 +20,7 @@ from rl4co.utils.test_utils import generate_env_data
         "dpp",
         "mdpp",
         "smtwtp",
+        "shpp",
     ],
 )
 def test_am_policy(env_name, size=20, batch_size=2):

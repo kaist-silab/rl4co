@@ -16,6 +16,7 @@ from rl4co.models.zoo import (
     MatNet,
     NARGNNPolicy,
     SymNCO,
+    GLOP,
 )
 from rl4co.utils import RL4COTrainer
 

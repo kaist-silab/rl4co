@@ -11,6 +11,7 @@ from rl4co.envs.routing.sdvrp.env import SDVRPEnv
 from rl4co.envs.routing.spctsp.env import SPCTSPEnv
 from rl4co.envs.routing.svrp.env import SVRPEnv
 from rl4co.envs.routing.tsp.env import TSPEnv
+from rl4co.envs.routing.shpp.env import SHPPEnv
 
 from rl4co.envs.routing.atsp.generator import ATSPGenerator
 from rl4co.envs.routing.cvrp.generator import CVRPGenerator
@@ -23,4 +24,4 @@ from rl4co.envs.routing.pdp.generator import PDPGenerator
 from rl4co.envs.routing.svrp.generator import SVRPGenerator
 from rl4co.envs.routing.tsp.generator import TSPGenerator
 from rl4co.envs.routing.mdcpdp.generator import MDCPDPGenerator
-
+from rl4co.envs.routing.shpp.generator import SHPPGenerator
