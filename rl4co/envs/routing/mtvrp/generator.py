@@ -256,7 +256,8 @@ class MTVRPGenerator(Generator):
     @staticmethod
     def _default_time_window(td, remove):
         default_tw = torch.zeros_like(td["time_windows"])
-        default_tw[..., 1] = float("inf")
+        #default_tw[..., 1] = float("inf")
+        default_tw[..., 1] = 4.6 # max tw
         td["time_windows"][remove] = default_tw[remove]
         td["service_time"][remove] = torch.zeros_like(td["service_time"][remove])
         return td

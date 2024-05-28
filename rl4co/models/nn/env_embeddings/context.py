@@ -32,6 +32,7 @@ def env_context_embedding(env_name: str, config: dict) -> nn.Module:
         "mtsp": MTSPContext,
         "smtwtp": SMTWTPContext,
         "mdcpdp": MDCPDPContext,
+        "mtvrp": MTVRPContext
     }
 
     if env_name not in embedding_registry:
@@ -145,6 +146,50 @@ class VRPContext(EnvContext):
     def _state_embedding(self, embeddings, td):
         state_embedding = td["vehicle_capacity"] - td["used_capacity"]
         return state_embedding
+
+class VRPBContext(EnvContext):
+    """Context embedding for the Capacitated Vehicle Routing Problem (CVRP).
+    Project the following to the embedding space:
+        - current node embedding
+        - remaining capacity (vehicle_capacity - used_capacity)
+    """
+
+    def __init__(self, embed_dim):
+        super(VRPContext, self).__init__(
+            embed_dim=embed_dim, step_context_dim=embed_dim + 1
+        )
+
+    def _state_embedding(self, embeddings, td):
+        mask = (td["used_capacity_backhaul"] == 0)
+        used_capacity = torch.where(mask, td["used_capacity_linehaul"], td["used_capacity_backhaul"])
+        state_embedding = td["vehicle_capacity"] - used_capacity
+        return state_embedding
+    
+class MTVRPContext(VRPBContext):
+    """Context embedding for the Capacitated Vehicle Routing Problem (CVRP).
+    Project the following to the embedding space:
+        - current node embedding
+        - remaining capacity (vehicle_capacity - used_capacity)
+        - current time
+        - current route length
+        - if route should be open
+    """
+
+    def __init__(self, embed_dim):
+        super(VRPBContext, self).__init__(
+            embed_dim=embed_dim, step_context_dim=embed_dim + 4
+        )
+
+    def _state_embedding(self, embeddings, td):
+
+        capacity = super()._state_embedding(embeddings, td)
+        current_time = td["current_time"]
+        current_length = td["current_route_length"]
+        is_open = td["open_route"]
+        is_open_tensor = torch.zeros_like(is_open, dtype=torch.float)
+        is_open_tensor[is_open] = 1
+
+        return torch.cat([capacity, current_time, current_length, is_open_tensor], -1)
 
 
 class VRPTWContext(VRPContext):

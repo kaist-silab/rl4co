@@ -2,9 +2,7 @@ import torch
 import torch.nn as nn
 
 from tensordict.tensordict import TensorDict
-
 from rl4co.models.nn.ops import PositionalEncoding
-
 
 def env_init_embedding(env_name: str, config: dict) -> nn.Module:
     """Get environment initial embedding. The init embedding is used to initialize the
@@ -34,6 +32,7 @@ def env_init_embedding(env_name: str, config: dict) -> nn.Module:
         "smtwtp": SMTWTPInitEmbedding,
         "mdcpdp": MDCPDPInitEmbedding,
         "fjsp": FJSPFeatureEmbedding,
+        "mtvrp":MTVRPInitEmbedding,
     }
 
     if env_name not in embedding_registry:
@@ -146,6 +145,28 @@ class VRPTWInitEmbedding(VRPInitEmbedding):
                 (cities, td["demand"][..., None], time_windows, durations[..., None]), -1
             )
         )
+        return torch.cat((depot_embedding, node_embeddings), -2)
+    
+
+class MTVRPInitEmbedding(VRPInitEmbedding):
+    def __init__(self, embed_dim, linear_bias=True, node_dim: int = 5):
+        # node_dim = 5: x, y, demand, tw start, tw end
+        super(MTVRPInitEmbedding, self).__init__(embed_dim, linear_bias, node_dim)
+
+    def forward(self, td):
+        depot, cities = td["locs"][:, :1, :], td["locs"][:, 1:, :]
+        #durations = td["durations"][..., 1:]
+        time_windows = td["time_windows"][..., 1:, :]
+        # embeddings
+        demands =  td["demand_linehaul"][..., None] - td["demand_backhaul"][..., None]
+
+        depot_embedding = self.init_embed_depot(depot)
+        node_embeddings = self.init_embed(
+            torch.cat(
+                (cities, demands[:,1:], time_windows), -1
+            )
+        )
+
         return torch.cat((depot_embedding, node_embeddings), -2)
 
 
@@ -383,7 +404,6 @@ class MDCPDPInitEmbedding(nn.Module):
         delivery_embeddings = self.init_embed_delivery(delivery_feats)
         # concatenate on graph size dimension
         return torch.cat([depot_embeddings, pick_embeddings, delivery_embeddings], -2)
-
 
 class FJSPFeatureEmbedding(nn.Module):
     def __init__(self, embed_dim, linear_bias=True, norm_coef: int = 100):

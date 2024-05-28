@@ -281,7 +281,7 @@ class MTVRPEnv(RL4COEnvBase):
             & ~exceeds_dist_limit
             & ~td["visited"]
         )
-
+        #print(can_visit)
         # Mask depot: don't visit depot if coming from there and there are still customer nodes I can visit
         can_visit[:, 0] = ~((curr_node == 0) & (can_visit[:, 1:].sum(-1) > 0))
         return can_visit
@@ -349,9 +349,14 @@ class MTVRPEnv(RL4COEnvBase):
             curr_time = torch.max(
                 curr_time + dist, gather_by_index(td["time_windows"], next_node)[..., 0]
             )
+
+            new_shape = curr_time.size()
+            skip_open_end = td["open_route"].view(*new_shape) & (next_node == 0).view(*new_shape)
+
             assert torch.all(
-                curr_time <= gather_by_index(td["time_windows"], next_node)[..., 1]
+                (curr_time <= gather_by_index(td["time_windows"], next_node)[..., 1]) | skip_open_end
             ), "vehicle cannot start service before deadline"
+
             curr_time = curr_time + gather_by_index(td["service_time"], next_node)
             curr_node = next_node
             curr_time[curr_node == 0] = 0.0  # reset time for depot
@@ -450,7 +455,7 @@ class MTVRPEnv(RL4COEnvBase):
     def check_variants(td):
         """Check if the problem has the variants"""
         has_open = td["open_route"].squeeze(-1)
-        has_tw = (td["time_windows"][:, :, 1] != float("inf")).any(-1)
+        has_tw = (td["time_windows"][:, :, 1] != 4.6).any(-1)
         has_limit = (td["distance_limit"] != float("inf")).squeeze(-1)
         has_backhaul = (td["demand_backhaul"] != 0).any(-1)
         return has_open, has_tw, has_limit, has_backhaul
