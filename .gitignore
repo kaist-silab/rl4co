@@ -167,6 +167,9 @@ wandb/
 # poetry
 poetry.lock
 
+# uv
+uv.lock
+
 # idea
 .idea
 

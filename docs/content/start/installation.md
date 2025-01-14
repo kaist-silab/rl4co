@@ -8,14 +8,68 @@ pip install rl4co
 ```
 
 ## Local install and development
-If you want to develop RL4CO or access the latest builds, we recommend you to install it locally with `pip` in editable mode:
+If you want to develop RL4CO or access the latest builds, you may install it locally after downloading the repo:
 
 ```bash
 git clone https://github.com/ai4co/rl4co && cd rl4co
+```
+
+The simplest way is via `pip` in editable mode with
+```bash
 pip install -e .
 ```
 
-> Note: `conda` is also a good candidate for hassle-free installation of PyTorch: check out the [PyTorch website](https://pytorch.org/get-started/locally/) for more details.
+To install optional dependencies, you may specify them as follows `pip install -e ".[dev,graph,routing,docs]"`.
+
+We recommend installing in virtual environments with a package manager such as the blazing-fast [`uv`](https://docs.astral.sh/uv/), [`poetry`](https://python-poetry.org/), or [`conda`](https://docs.conda.io/en/latest/), with quickstart commands below:
+
+<details>
+    <summary>Install with `uv`</summary>
+
+You first need to install `uv`, i.e., with `pip`:
+```bash
+pip install uv
+```
+
+Then, you can create a virtual environment locally and activate it:
+```bash
+uv sync --frozen
+source .venv/bin/activate
+```
+
+Note that `uv` directly generates the `.venv` folder in the current directory.
+
+
+To install (all) extras, you may use `uv sync --frozen --all-extras` or specify them individually with `uv sync --frozen --extra dev --extra graph --extra routing --extra docs`.
+
+</details>
+
+
+<details>
+    <summary>Install with `poetry`</summary>
+
+Make sure that you have `poetry` installed from the [official website](https://python-poetry.org/docs/).
+
+Then, you can create a virtual environment locally:
+```bash
+poetry install
+poetry env activate # poetry shell removed in poetry 2.0.0
+```
+
+Note: you need to upgrade `poetry` to the latest version with `poetry self update` to versions >=2.0.0 (see [blog post](https://python-poetry.org/blog/announcing-poetry-2.0.0/)). This is also the reason why we don't need a special `pyproject.toml` anymore.
+
+</details>
+
+
+<details>
+    <summary>Install with `conda`</summary>
+
+After [installing `conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html), you can create a virtual environment locally with:
+```bash
+conda create -n rl4co python=3.12
+conda activate rl4co
+```
+</details>
 
 
 ## Minimalistic Example

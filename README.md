@@ -10,7 +10,7 @@
 <a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
 <a href="https://github.com/pytorch/rl"><img alt="base: TorchRL" src="https://img.shields.io/badge/base-TorchRL-red"></a>
 <a href="https://hydra.cc/"><img alt="config: Hydra" src="https://img.shields.io/badge/config-Hydra-89b8cd"></a>
-<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a> 
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 <a href="https://join.slack.com/t/rl4co/shared_invite/zt-1ytz2c1v4-0IkQ8NQH4TRXIX8PrRmDhQ"><img alt="Slack" src="https://img.shields.io/badge/slack-chat-611f69.svg?logo=slack"></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-red.svg"></a>
 <a href="https://colab.research.google.com/github/ai4co/rl4co/blob/main/examples/1-quickstart.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>
@@ -89,7 +89,7 @@ git clone https://github.com/ai4co/rl4co && cd rl4co
 pip install -e .
 ```
 
-We recommend using a virtual environment such as `conda` to install `rl4co` locally.
+We recommend installing in virtual environments with a package manager such as the blazing-fast [`uv`](https://docs.astral.sh/uv/), [`poetry`](https://python-poetry.org/), or [`conda`](https://docs.conda.io/en/latest/); instruction are available in the [documentation](https://rl4.co/docs/content/start/installation/).
 
 
 
@@ -174,14 +174,7 @@ pytest tests
 
 ### Known Bugs
 
-
-#### Bugs installing PyTorch Geometric (PyG)
-
-Installing `PyG` via `Conda` seems to update Torch itself. We have found that this update introduces some bugs with `torchrl`. At this moment, we recommend installing `PyG` with `Pip`:
-```bash
-pip install torch_geometric
-```
-
+You may check out the [issues](https://github.com/ai4co/rl4co/issues) and [discussions](https://github.com/ai4co/rl4co/discussions). We will also periodically post updates on the [FAQ section](https://rl4.co/docs/content/general/faq/).
 
 ## Contributing
 

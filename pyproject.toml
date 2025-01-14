@@ -1,47 +1,48 @@
-[tool.poetry]
+[project]
 name = "rl4co"
-version = "0.5.1"
+version = "0.5.2dev0"
 description = "RL4CO: an Extensive Reinforcement Learning for Combinatorial Optimization Benchmark"
 authors = [
-    "Federico Berto <berto.federico2@gmail.com>",
-    "Chuanbo Hua <cbhua@kaist.ac.kr>",
-    "Junyoung Park <junyoungpark.ml@gmail.com>",
-    "Laurin Luttmann <laurin.luttmann@gmail.com>",
-    "Yining Ma",
-    "Fanchen Bu",
-    "Jiarui Wang",
-    "Haoran Ye",
-    "Minsu Kim",
-    "Sanghyeok Choi",
-    "Zepeda Gast",
-    "Andre Hottung",
-    "Jianan Zhou",
-    "Jieyi Bi",
-    "Yu Hu",
-    "Fei Liu",
-    "Hyeonah Kim",
-    "Jiwoo Son",
-    "Haeyeon Kim",
-    "Davide Angioni",
-    "Wouter Kool",
-    "Zhiguang Cao",
-    "Jie Zhang",
-    "Kijung Shin",
-    "Cathy Wu",
-    "Sungsoo Ahn",
-    "Guojie Song",
-    "Changhyun Kwon",
-    "Lin Xie",
-    "Jinkyoo Park",
-    "AI4CO",
+    { name = "Federico Berto", email = "berto.federico2@gmail.com" },
+    { name = "Chuanbo Hua", email = "cbhua@kaist.ac.kr" },
+    { name = "Junyoung Park", email = "junyoungpark.ml@gmail.com" },
+    { name = "Laurin Luttmann", email = "laurin.luttmann@gmail.com" },
+    { name = "Yining Ma" },
+    { name = "Fanchen Bu" },
+    { name = "Jiarui Wang" },
+    { name = "Haoran Ye" },
+    { name = "Minsu Kim" },
+    { name = "Sanghyeok Choi" },
+    { name = "Zepeda Gast" },
+    { name = "Andre Hottung" },
+    { name = "Jianan Zhou" },
+    { name = "Jieyi Bi" },
+    { name = "Yu Hu" },
+    { name = "Fei Liu" },
+    { name = "Hyeonah Kim" },
+    { name = "Jiwoo Son" },
+    { name = "Haeyeon Kim" },
+    { name = "Davide Angioni" },
+    { name = "Wouter Kool" },
+    { name = "Zhiguang Cao" },
+    { name = "Jie Zhang" },
+    { name = "Kijung Shin" },
+    { name = "Cathy Wu" },
+    { name = "Sungsoo Ahn" },
+    { name = "Guojie Song" },
+    { name = "Changhyun Kwon" },
+    { name = "Lin Xie" },
+    { name = "Jinkyoo Park" },
+    { name = "AI4CO" },
 ]
+requires-python = ">=3.10"
 readme = "README.md"
 license = "MIT"
-homepage = "https://rl4.co"
-repository = "https://github.com/ai4co/rl4co"
-documentation = "https://rl4co.readthedocs.io"
-keywords = ["reinforcement learning", "combinatorial optimization", "benchmark"]
-packages = [{ include = "rl4co" }]
+keywords = [
+    "reinforcement learning",
+    "combinatorial optimization",
+    "benchmark",
+]
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -53,59 +54,38 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "einops",
+    "hydra-core",
+    "hydra-colorlog",
+    "lightning>=2.1.0",
+    "matplotlib",
+    "omegaconf",
+    "pyrootutils",
+    "rich",
+    "robust-downloader",
+    "scipy",
+    "tensordict>=0.6.0",
+    "torchrl>=0.6.0",
+    "wandb",
 ]
 
-[tool.poetry.urls]
-"Tracker" = "https://github.com/ai4co/rl4co/issues"
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pre-commit>=3.3.3",
+    "ruff",
+    "pytest",
+    "pytest-cov",
+]
 
-[tool.poetry.dependencies]
-# Required dependencies
-python = ">=3.10"
-einops = "*"
-hydra-core = "*"
-hydra-colorlog = "*"
-lightning = ">=2.1.0"
-matplotlib = "*"
-omegaconf = "*"
-pyrootutils = "*"
-rich = "*"
-robust-downloader = "*"
-scipy = "*"
-tensordict = ">=0.6.0"
-torchrl = ">=0.6.0"
-wandb = "*"
-# Dev dependencies
-black = { version = "*", optional = true }
-pre-commit = { version = ">=3.3.3", optional = true }
-ruff = { version = "*", optional = true }
-pytest = { version = "*", optional = true }
-pytest-cov = { version = "*", optional = true }
-# Graph
-torch_geometric = { version = "*", optional = true }
-# Routing
-numba = { version = ">=0.58.1", optional = true }
-pyvrp = { version = ">=0.9.0", optional = true, python = "<4.0" }
-# Docs
-mkdocs = { version = "*", optional = true }
-mkdocs-material = { version = "*", optional = true }
-mkdocstrings-python = { version = "*", optional = true }
-mike = { version = "*", optional = true }
-mkdocs-jupyter = { version = "*", optional = true }
-mkdocs-redirects = { version = "*", optional = true }
-mkdocs-autolinks-plugin = { version = "*", optional = true }
-griffe-typingdoc = { version = "*", optional = true }
-griffe-inherited-docstrings = { version = "*", optional = true }
-griffe = { version = "*", optional = true }
-mkdocs-same-dir = { version = "*", optional = true }
-mdx-breakless-lists = { version = "*", optional = true }
-mdx-truly-sane-lists = { version = "*", optional = true }
-markdown-gfm-admonition = { version = "*", optional = true }
-
-[tool.poetry.extras]
-dev = ["black", "pre-commit", "ruff", "pytest", "pytest-cov"]
 graph = ["torch_geometric"]
-routing = ["numba", "pyvrp"]
+routing = [
+    "numba>=0.58.1",
+    "pyvrp>=0.9.0 ; python_version < '4.0'",
+]
 docs = [
     "mkdocs",
     "mkdocs-material",
@@ -117,12 +97,28 @@ docs = [
     "griffe-typingdoc",
     "griffe-inherited-docstrings",
     "griffe",
-    "black", # for formatting docstrings
+    "black",
     "mkdocs-same-dir",
     "mdx-breakless-lists",
     "mdx-truly-sane-lists",
     "markdown-gfm-admonition",
 ]
+
+[project.urls]
+Homepage = "https://rl4.co"
+Repository = "https://github.com/ai4co/rl4co"
+Documentation = "https://rl4co.readthedocs.io"
+Tracker = "https://github.com/ai4co/rl4co/issues"
+
+[tool.hatch.build.targets.sdist]
+include = ["rl4co"]
+
+[tool.hatch.build.targets.wheel]
+include = ["rl4co"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 90
@@ -179,7 +175,3 @@ exclude_lines = [
     "pragma: no cover",
     "if __name__ == .__main__.:",
 ]
-
-[build-system]
-requires = ["poetry"]
-build-backend = "poetry.core.masonry.api"
