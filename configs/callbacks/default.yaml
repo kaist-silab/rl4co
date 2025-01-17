@@ -1,0 +1,19 @@
+defaults:
+  - model_checkpoint.yaml
+  - model_summary.yaml
+  - rich_progress_bar.yaml
+  - speed_monitor.yaml
+  - learning_rate_monitor.yaml
+  - _self_
+
+model_checkpoint:
+  dirpath: ${paths.output_dir}/checkpoints
+  filename: "epoch_{epoch:03d}"
+  monitor: "val/reward"
+  mode: "max"
+  save_last: True
+  auto_insert_metric_name: False
+  save_top_k: 1 # set to -1 to save all checkpoints
+
+model_summary:
+  max_depth: 5 # change to -1 to show all. 5 strikes a good balance between readability and completeness

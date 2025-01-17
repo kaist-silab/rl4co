@@ -1,0 +1,45 @@
+# @package _global_
+
+defaults:
+  - override /model: am.yaml
+  - override /env: tsp.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+  - override /logger: wandb.yaml
+
+env:
+  generator_params:
+    num_loc: 50
+
+logger:
+  wandb:
+    project: "rl4co"
+    tags: ["am", "${env.name}"]
+    group: "${env.name}${env.generator_params.num_loc}"
+    name: "am-xl-${env.name}${env.generator_params.num_loc}"
+
+
+model:
+  policy_kwargs:
+    num_encoder_layers: 6
+    normalization: 'instance'
+  batch_size: 2048
+  val_batch_size: 1024
+  test_batch_size: 1024
+  train_data_size: 1_280_000
+  val_data_size: 10_000
+  test_data_size: 10_000
+  optimizer_kwargs:
+    lr: 1e-4
+    weight_decay: 1e-6
+  lr_scheduler:
+    "MultiStepLR"
+  lr_scheduler_kwargs:
+    milestones: [480, 495]
+    gamma: 0.1
+
+trainer:
+  max_epochs: 500
+
+seed: 1234
+

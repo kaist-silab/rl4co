@@ -1,0 +1,33 @@
+# @package _global_
+
+defaults:
+  - scheduling/base
+
+logger:
+  wandb:
+    tags: ["gnn-ppo", "${env.name}"]
+    name: "gnn-ppo-${env.name}-${env.generator_params.num_jobs}j-${env.generator_params.num_machines}m"
+
+# params from Song et al.
+model:
+  _target_: rl4co.models.L2DPPOModel
+  policy_kwargs:
+    embed_dim: 256
+    num_encoder_layers: 3
+    scaling_factor: ${scaling_factor}
+    ppo_epochs: 2
+    het_emb: False
+    normalization: instance
+    test_decode_type: greedy
+  batch_size: 128
+  val_batch_size: 512
+  test_batch_size: 64
+  mini_batch_size: 512
+
+
+trainer:
+  max_epochs: 10
+
+
+env:
+  stepwise_reward: True

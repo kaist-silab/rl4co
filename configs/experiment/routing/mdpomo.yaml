@@ -1,0 +1,41 @@
+# @package _global_
+
+defaults:
+  - override /model: pomo.yaml
+  - override /env: cvrp.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+  - override /logger: wandb.yaml
+
+env:
+  generator_params:
+    num_loc: 50
+    loc_distribution: "mix_distribution"
+    
+
+logger:
+  wandb:
+    project: "rl4co"
+    tags: ["mdpomo", "${env.name}"]
+    group: "${env.name}${env.generator_params.num_loc}"
+    name: "mdpomo-${env.name}${env.generator_params.num_loc}"
+
+
+model:
+  batch_size: 512
+  train_data_size: 10_000
+  val_data_size: 10_000
+  test_data_size: 10_000
+  optimizer_kwargs:
+    lr: 1e-4
+    weight_decay: 1e-6
+  lr_scheduler:
+    "MultiStepLR"
+  lr_scheduler_kwargs:
+    milestones: [9001]
+    gamma: 0.1
+
+trainer:
+  max_epochs: 10000
+
+seed: 1234

@@ -1,0 +1,30 @@
+/* Custom colors */
+:root {
+    --md-primary-fg-color:        #B92B0F;
+    --md-primary-fg-color--light: #F05F42;
+    --md-primary-fg-color--dark:  #B92B0F;
+
+    --md-accent-fg-color:                #B92B0F;
+    --md-accent-fg-color--transparent: var(--md-accent-fg-color); /* Default to current color */
+    --md-accent-bg-color:                #ffffff;
+    --md-accent-bg-color--light:         #B92B0F;
+  }
+
+[data-md-color-scheme="default"] {
+    --md-accent-fg-color--transparent: #f8d2cb; /* Transparent color for 'default' scheme */
+}
+
+[data-md-color-scheme="slate"] {
+  --md-accent-fg-color--transparent: #492821; /* Transparent color for 'default' scheme */
+}
+
+/* Ensure code blocks wrap text */
+.codehilite pre {
+  white-space: pre-wrap; /* Allow text to wrap within the pre element */
+  word-break: break-word; /* Break the word at the edge of the container if necessary */
+}
+
+/* Improve overall readability of code by adding some padding */
+.codehilite {
+  padding: 8px; /* Adjust padding to fit your design */
+}

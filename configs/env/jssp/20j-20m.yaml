@@ -1,0 +1,11 @@
+_target_: rl4co.envs.JSSPEnv
+name: jssp
+
+generator_params:
+  num_jobs: 20
+  num_machines: 20
+  min_processing_time: 1
+  max_processing_time: 99
+
+data_dir: ${paths.root_dir}/data/jssp/taillard
+test_file: ${env.generator_params.num_jobs}j_${env.generator_params.num_machines}m

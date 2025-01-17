@@ -1,0 +1,6 @@
+_target_: rl4co.envs.TSPEnv
+name: tsp
+
+generator_params:
+  num_loc: 20
+  loc_distribution: uniform

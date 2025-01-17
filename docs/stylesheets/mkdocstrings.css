@@ -1,0 +1,54 @@
+/* Indentation. */
+div.doc-contents:not(.first) {
+  padding-left: 15px;
+  border-left: .05rem solid var(--md-typeset-table-color);
+}
+
+
+/* Fancier color for operators such as * and |. */
+.doc-signature .o {
+  color: var(--md-code-hl-special-color);
+}
+
+/* Fancier color for constants such as None, True, and False. */
+.doc-signature .kc {
+  color: var(--md-code-hl-constant-color);
+}
+
+/* Fancier color for built-in types (only useful when cross-references are used). */
+.doc-signature .n > a[href^="https://docs.python.org/"][href*="/functions.html#"],
+.doc-signature .n > a[href^="https://docs.python.org/"][href*="/stdtypes.html#"] {
+  color: var(--md-code-hl-constant-color);
+}
+
+
+/* Nice names only in TOC */
+.doc-symbol-toc.doc-symbol-method::after {
+  content: "m";
+}
+
+.doc-symbol-toc.doc-symbol-function::after {
+  content: "f";
+}
+
+.doc-symbol-toc.doc-symbol-class::after {
+  content: "C";
+}
+
+.doc-symbol-toc.doc-symbol-module::after {
+  content: "M";
+}
+
+.doc-symbol-toc.doc-symbol-attribute::after {
+  content: "A";
+}
+
+.doc-symbol-toc.doc-symbol-parameter::after {
+  content: "P";
+}
+
+/* Line under link as solid */
+.doc-signature .autorefs {
+  color: inherit;
+  border-bottom: 1px solid currentcolor;
+}

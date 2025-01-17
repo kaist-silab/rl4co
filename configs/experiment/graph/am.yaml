@@ -1,0 +1,30 @@
+# @package _global_
+
+defaults:
+  - override /model: am.yaml
+  - override /env: mcp.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+  - override /logger: wandb.yaml
+
+logger:
+  wandb:
+    project: "rl4co"
+    tags: ["am", "${env.name}"]
+    group: ${env.name}
+    name: am-${env.name}
+
+model:
+  batch_size: 1000
+  train_data_size: 100_000
+  val_data_size: 1000
+  test_data_size: 1000
+  optimizer_kwargs:
+    lr: 1e-4
+  
+trainer:
+  max_epochs: 100
+
+seed: 1234
+
+

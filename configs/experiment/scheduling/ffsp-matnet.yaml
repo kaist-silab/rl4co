@@ -1,0 +1,46 @@
+# @package _global_
+
+defaults:
+  - override /model: matnet.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+  - override /logger: wandb.yaml
+  - override /env: ffsp.yaml
+
+logger:
+  wandb:
+    project: "rl4co"
+    log_model: "all"
+    group: "${env.name}-${env.generator_params.num_job}-${env.generator_params.num_machine}"
+    tags: ["matnet", "${env.name}"]
+    name: "matnet-${env.name}-${env.generator_params.num_job}j-${env.generator_params.num_machine}m"
+
+env:
+  generator_params:
+    num_stage: 3
+    num_machine: 4
+    num_job: 20
+    flatten_stages: False
+
+trainer:
+  max_epochs: 50
+  # NOTE for some reason l2d is extremely sensitive to precision
+  # ONLY USE 32-true for l2d!
+  precision: 32-true
+  gradient_clip_val: 10 # orig paper does not use grad clipping
+
+seed: 12345678
+
+model:
+  batch_size: 50
+  train_data_size: 10_000
+  val_data_size: 1_000
+  test_data_size: 1_000
+  optimizer_kwargs:
+    lr: 1e-4
+    weight_decay: 1e-6
+  lr_scheduler:
+    "MultiStepLR"
+  lr_scheduler_kwargs:
+    milestones: [35, 45]
+    gamma: 0.1

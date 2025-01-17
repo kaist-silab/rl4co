@@ -1,0 +1,257 @@
+---
+hide:
+- navigation
+- toc
+--- 
+
+<div>                        
+<style type="text/css">
+.md-typeset h1,
+.md-content__button {
+    display: none;
+}
+</style>      
+</div> 
+
+
+<div class="md-content" data-md-component="content">
+  <article class="md-content__inner md-typeset">
+    <div id="particles-container-main" class="md-main__inner md-content" data-md-content="main">
+        <script src="docs/js/tsparticles.js"></script>
+        <style>
+            .md-main__inner #particles-container {
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+            .md-main__inner #tsparticles {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+            .md-main__inner #particles-mask {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                pointer-events: none;
+                z-index: 5;
+            }
+            .md-main__inner #logo-overlay {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 60%;
+                height: auto;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+            .md-main__inner .loading-indicator {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 24px;
+                color: #333;
+            }
+            @media (max-width: 768px) {
+                .md-main__inner #gradient {
+                    height: 50px;
+                }
+            }
+        </style>
+        <div id="particles-container">
+            <div class="loading-indicator">Loading...</div>
+            <div id="tsparticles"></div>
+            <div id="particles-mask"></div>
+            <img id="logo-overlay" class="md-content" src="https://raw.githubusercontent.com/ai4co/assets/main/svg/rl4co_animated_full.svg" alt="RL4CO Logo">
+            <div id="gradient"></div>
+        </div>
+
+        <script>
+            (async () => {
+                const IMAGE_WIDTH = 3200;
+                const IMAGE_HEIGHT = 955;
+                const ASPECT_RATIO = IMAGE_HEIGHT / IMAGE_WIDTH;
+
+                const setContainerDimensions = () => {
+                    const container = document.querySelector('.md-main__inner #particles-container');
+                    const mainContent = document.querySelector('.md-main__inner');
+                    
+                    if (mainContent && container) {
+                        const containerWidth = mainContent.offsetWidth;
+                        container.style.width = `${containerWidth}px`;
+                        
+                        // Calculate height based on the aspect ratio and 60% width
+                        const imageWidth = containerWidth * 0.6;
+                        const imageHeight = imageWidth * ASPECT_RATIO;
+                        container.style.height = `${imageHeight * 2}px`;
+                    }
+                };
+
+                const setMaskGradient = () => {
+                    const mask = document.querySelector('.md-main__inner #particles-mask');
+                    const mainContent = document.querySelector('.md-main__inner');
+                    if (mask && mainContent) {
+                        const computedStyle = getComputedStyle(mainContent);
+                        const backgroundColor = computedStyle.backgroundColor;
+
+                        mask.style.background = `
+                            linear-gradient(to right, 
+                                ${backgroundColor} 0%, 
+                                rgba(0,0,0,0) 10%, 
+                                rgba(0,0,0,0) 90%, 
+                                ${backgroundColor} 100%
+                            ),
+                            linear-gradient(to bottom, 
+                                ${backgroundColor} 0%, 
+                                rgba(0,0,0,0) 10%, 
+                                rgba(0,0,0,0) 90%, 
+                                ${backgroundColor} 100%
+                            )
+                        `;
+                    }
+                };
+
+                // Set initial dimensions and mask
+                setContainerDimensions();
+                setMaskGradient();
+
+                // Update dimensions and mask on window resize
+                window.addEventListener('resize', () => {
+                    setContainerDimensions();
+                    setMaskGradient();
+                });
+
+                // Load the image
+                const img = document.querySelector('.md-main__inner #logo-overlay');
+                if (img) {
+                    img.onload = () => {
+                        img.style.opacity = 1;
+                        const loadingIndicator = document.querySelector('.md-main__inner .loading-indicator');
+                        if (loadingIndicator) {
+                            loadingIndicator.style.display = 'none';
+                        }
+                    };
+                }
+
+                // Initialize particles
+                await tsParticles.load({
+                  id: "tsparticles",
+                  options: {
+                      fullScreen: {
+                          enable: false,
+                      },
+                      particles: {
+                          number: {
+                              value: 200,
+                              density: {
+                                  enable: true,
+                                  value_area: 800
+                              },
+                              limit: 300  // Set maximum number of particles
+                          },
+                          color: {
+                              value: "#bebebe"
+                          },
+                          shape: {
+                              type: "circle"
+                          },
+                          opacity: {
+                              value: 0.6,
+                              random: false
+                          },
+                          size: {
+                              value: 2,
+                              random: true
+                          },
+                          links: {
+                              enable: true,
+                              distance: 100,
+                              color: "#bebebe",
+                              opacity: 0.5,
+                              width: 1
+                          },
+                          move: {
+                              enable: true,
+                              speed: 0.5,
+                              direction: "none",
+                              random: false,
+                              straight: false,
+                              outModes: "out",
+                              bounce: false,
+                          }
+                      },
+                      interactivity: {
+                          detectsOn: "canvas",
+                          events: {
+                              onHover: {
+                                  enable: true,
+                                  mode: "grab"
+                              },
+                              onClick: {
+                                  enable: true,
+                                  mode: "push"
+                              },
+                              resize: true
+                          },
+                          modes: {
+                              grab: {
+                                  distance: 140,
+                                  links: {
+                                      opacity: 1
+                                  }
+                              },
+                              push: {
+                                  quantity: 4,
+                                  limit: 300  // Limit for push mode
+                              }
+                          }
+                      },
+                      detectRetina: true,
+                      responsive: [
+                          {
+                              maxWidth: 768,
+                              options: {
+                                  particles: {
+                                      number: {
+                                          value: 100,
+                                          limit: 150  // Adjusted limit for smaller screens
+                                      }
+                                  }
+                              }
+                          }
+                      ]
+                  }
+              });
+
+                // Fade in particles background
+                const particlesElement = document.querySelector('.md-main__inner #tsparticles');
+                if (particlesElement) {
+                    particlesElement.style.opacity = 1;
+                }
+
+                // Observer for theme changes
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'data-md-color-scheme') {
+                            setMaskGradient();
+                        }
+                    });
+                });
+
+                const mainContent = document.querySelector('.md-main__inner');
+                if (mainContent) {
+                    observer.observe(mainContent, { attributes: true });
+                }
+            })();
+        </script>
+    </div>
+  </article>
+</div>

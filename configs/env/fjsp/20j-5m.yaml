@@ -1,0 +1,13 @@
+_target_: rl4co.envs.FJSPEnv
+name: fjsp
+
+generator_params:
+  num_jobs: 20
+  num_machines: 5
+  min_ops_per_job: 4
+  max_ops_per_job: 6
+  min_processing_time: 1
+  max_processing_time: 20
+  min_eligible_ma_per_op: 1
+
+data_dir: ${paths.root_dir}/data/fjsp

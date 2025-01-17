@@ -1,0 +1,11 @@
+_target_: rl4co.envs.MDPPEnv
+name: mdpp
+
+generator_params:
+  max_decaps: 20
+  data_dir: ${paths.data_dir}/mdpp
+
+data_dir: ${paths.data_dir}/mdpp
+reward_type: minmax
+val_file: mdpp10_test_seed1234.npz # same as test_file due to data scarcity
+test_file: mdpp10_test_seed1234.npz

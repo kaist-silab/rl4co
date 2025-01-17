@@ -1,0 +1,11 @@
+_target_: rl4co.models.PolyNet
+
+# During val/test only we apply dihedral transformations
+num_augment: 8
+
+metrics:
+  train: ["loss", "reward"]
+  val: ["reward", "max_reward", "max_aug_reward"]
+  test: ${model.metrics.val}
+  log_on_step: True
+

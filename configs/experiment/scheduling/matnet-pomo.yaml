@@ -1,0 +1,38 @@
+# @package _global_
+
+defaults:
+  - scheduling/base
+
+logger:
+  wandb:
+    tags: ["matnet-pomo", "${env.name}"]
+    name: "matnet-pomo-${env.name}-${env.generator_params.num_jobs}j-${env.generator_params.num_machines}m"
+
+embed_dim: 256
+
+model:
+  _target_: rl4co.models.POMO
+  policy:
+    _target_: rl4co.models.L2DPolicy
+    encoder:
+      _target_: rl4co.models.zoo.matnet.matnet_w_sa.Encoder
+      embed_dim: ${embed_dim}
+      num_heads: 8
+      num_layers: 4
+      normalization: "batch"
+      init_embedding:
+        _target_: rl4co.models.nn.env_embeddings.init.FJSPMatNetInitEmbedding
+        embed_dim: ${embed_dim}
+        scaling_factor: ${scaling_factor}
+    env_name: ${env.name}
+    embed_dim: ${embed_dim}
+    stepwise_encoding: False
+    het_emb: True
+    scaling_factor: ${scaling_factor}
+  batch_size: 64
+  num_starts: 10
+  num_augment: 0
+  baseline: "shared"
+  metrics:
+    val: ["reward", "max_reward"]
+    test: ${model.metrics.val}

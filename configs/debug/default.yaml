@@ -1,0 +1,45 @@
+# @package _global_
+defaults:
+  # disable callbacks, experiments and loggers during debugging
+  - override /logger: null
+  - override /experiment: null
+  - override /callbacks: null
+
+# default debugging setup, runs 1 full epoch
+# other debugging configs can inherit from this one
+
+# overwrite task name so debugging logs are stored in separate folder
+task_name: "debug"
+
+extras:
+  ignore_warnings: False
+  enforce_tags: False
+
+# sets level of all command line loggers to 'DEBUG'
+# https://hydra.cc/docs/tutorials/basic/running_your_app/logging/
+hydra:
+  job_logging:
+    root:
+      level: DEBUG
+  # use this to also set hydra loggers to 'DEBUG'
+  # verbose: True
+
+trainer:
+  max_epochs: 1
+  accelerator: cpu # debuggers don't like gpus
+  devices: 1 # debuggers don't like multiprocessing
+  detect_anomaly: true # raise exception if NaN or +/-inf is detected in any tensor
+
+model:  # small batches and datasets for quick debugging
+  batch_size: 8
+  val_batch_size: 32
+  test_batch_size: 32
+  train_data_size: 64
+  val_data_size: 1_000
+  test_data_size: 1_000
+  optimizer_kwargs:
+    lr: 1e-4
+
+data:
+  num_workers: 0 # debuggers don't like multiprocessing
+  pin_memory: False # disable gpu memory pin

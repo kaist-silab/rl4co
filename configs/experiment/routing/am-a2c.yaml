@@ -1,0 +1,22 @@
+# @package _global_
+
+# Use the following to take the default values from am.yaml
+# Replace below only the values that you want to change compared to the default values
+defaults:
+  - routing/am.yaml
+  - _self_
+
+logger:
+  wandb:
+    tags: ["am-a2c", "${env.name}"]
+    name: am-a2c-${env.name}${env.generator_params.num_loc}
+
+model:
+  _target_: rl4co.models.A2C
+  policy:
+    _target_: rl4co.models.AttentionModelPolicy
+    env_name: "${env.name}"
+  actor_optimizer_kwargs:
+    lr: 1e-4
+    weight_decay: 1e-6
+  critic_optimizer_kwargs: null # default to actor_optimizer_kwargs

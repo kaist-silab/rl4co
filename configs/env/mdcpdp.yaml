@@ -1,0 +1,13 @@
+_target_: rl4co.envs.MDCPDPEnv
+name: mdcpdp
+
+depot_mode: multiple
+
+generator_params:
+  num_loc: 20
+  loc_distribution: uniform
+  num_depot: 4
+  min_loc: 0
+  max_loc: 1
+  min_capacity: 1
+  max_capacity: 2

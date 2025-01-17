@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+{% if page.nb_url %}
+    {% set path_parts = page.url.strip('/').split('/') %}
+    {% set last_part = path_parts[-1] %}
+    {% set notebook_url = page.url ~ last_part ~ '.ipynb' %}
+    <a href="{{ notebook_url | url }}" title="Download Notebook" class="md-content__button md-icon">
+        {% include ".icons/material/download.svg" %}
+    </a>
+{% endif %}
+{{ super() }}
+{% endblock content %}

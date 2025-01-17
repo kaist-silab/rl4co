@@ -1,0 +1,40 @@
+# @package _global_
+
+defaults:
+  - override /model: l2d.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+  - override /logger: wandb.yaml
+
+logger:
+  wandb:
+    project: "rl4co"
+    log_model: "all"
+    group: "${env.name}-${env.generator_params.num_jobs}-${env.generator_params.num_machines}"
+    tags: ???
+    name: ???
+
+trainer:
+  max_epochs: 10
+  # NOTE for some reason l2d is extremely sensitive to precision
+  # ONLY USE 32-true for l2d!
+  precision: 32-true
+
+seed: 12345678
+
+scaling_factor: ${env.generator_params.max_processing_time}
+
+model:
+  _target_: ???
+  batch_size: ???
+  train_data_size: 2_000
+  val_data_size: 1_000
+  test_data_size: 100
+  optimizer_kwargs:
+    lr: 2e-4
+    weight_decay: 1e-6
+  lr_scheduler: "ExponentialLR"
+  lr_scheduler_kwargs:
+    gamma: 0.95
+  reward_scale: scale
+  max_grad_norm: 1

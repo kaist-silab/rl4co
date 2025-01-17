@@ -1,0 +1,28 @@
+# @package _global_
+
+defaults:
+  - scheduling/base
+
+logger:
+  wandb:
+    tags: ["hgnn-pomo", "${env.name}"]
+    name: "hgnn-pomo-${env.name}-${env.generator_params.num_jobs}j-${env.generator_params.num_machines}m"
+
+model:
+  _target_: rl4co.models.POMO
+  policy:
+    _target_: rl4co.models.L2DPolicy
+    env_name: ${env.name}
+    embed_dim: 256
+    num_encoder_layers: 3
+    stepwise_encoding: False
+    scaling_factor: ${scaling_factor}
+    het_emb: True
+    normalization: instance
+  num_starts: 10
+  batch_size: 64
+  num_augment: 0
+  baseline: "shared"
+  metrics:
+    val: ["reward", "max_reward"]
+    test: ${model.metrics.val}

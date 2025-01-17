@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="1088 928 818 955" width="818" height="955">
+  <defs/>
+  <g id="Style_1-5" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1" fill="none">
+    <title>Style 1-5</title>
+    <g id="Style_1-5_Logo">
+      <title>Logo</title>
+      <g id="Graphic_2">
+        <path d="M 1497 928.434 L 1905 1167.0755 L 1905 1644.3585 L 1497 1883 L 1089 1644.3585 L 1089 1167.0755 Z" fill="#dd3412"/>
+      </g>
+      <g id="Graphic_3">
+        <circle cx="1538.5" cy="1141.5" r="43.5000695087325" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Graphic_4">
+        <circle cx="1318.5" cy="1367.5" r="43.5000695087326" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Graphic_5">
+        <circle cx="1643.5" cy="1446.5" r="43.5000695087325" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Graphic_6">
+        <circle cx="1425.5" cy="1674.5" r="43.5000695087325" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_7">
+        <line x1="1497.6944" y1="1183.4185" x2="1359.3056" y2="1325.5815" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_8">
+        <line x1="1375.353" y1="1381.3196" x2="1586.647" y2="1432.6804" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_9">
+        <line x1="1603.0717" y1="1488.7828" x2="1465.9283" y2="1632.2172" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_10">
+        <line x1="1526.3658" y1="1198.7347" x2="1437.6342" y2="1617.2653" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+    </g>
+  </g>
+</svg>

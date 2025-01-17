@@ -1,0 +1,7 @@
+# monitor speed of training
+
+speed_monitor:
+  _target_: rl4co.utils.callbacks.speed_monitor.SpeedMonitor
+  intra_step_time: True
+  inter_step_time: True
+  epoch_time: True

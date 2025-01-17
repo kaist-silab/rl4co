@@ -1,0 +1,10 @@
+_target_: rl4co.envs.DPPEnv
+name: dpp
+
+generator_params:
+  max_decaps: 20
+  data_dir: ${paths.root_dir}/data/dpp
+
+# data_dir: ${data_dir}/dpp
+val_file: test.npz # same as test_file due to data scarcity
+test_file: test.npz

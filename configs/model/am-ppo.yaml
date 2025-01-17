@@ -1,0 +1,4 @@
+_target_: rl4co.models.AMPPO
+
+metrics:
+  train: ["loss", "reward", "surrogate_loss", "value_loss", "entropy_bonus"]
