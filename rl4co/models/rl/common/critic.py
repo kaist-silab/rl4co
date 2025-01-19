@@ -1,6 +1,6 @@
 import copy
 
-from typing import Optional, Union
+from typing import Optional
 
 from tensordict import TensorDict
 from torch import Tensor, nn
@@ -45,7 +45,7 @@ class CriticNetwork(nn.Module):
         self.value_head = value_head
         self.customized = customized
 
-    def forward(self, x: Union[Tensor, TensorDict], hidden=None) -> Tensor:
+    def forward(self, x: Tensor | TensorDict, hidden=None) -> Tensor:
         """Forward pass of the critic network: encode the imput in embedding space and return the value
 
         Args:

@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -66,8 +66,8 @@ class MCPGenerator(Generator):
         min_size: int = 5,
         max_size: int = 15,
         n_sets_to_choose: int = 10,
-        size_distribution: Union[int, float, str, type, Callable] = Uniform,
-        weight_distribution: Union[int, float, str, type, Callable] = Uniform,
+        size_distribution: int | float | str | type | Callable = Uniform,
+        weight_distribution: int | float | str | type | Callable = Uniform,
         **kwargs,
     ):
         self.num_items = num_items

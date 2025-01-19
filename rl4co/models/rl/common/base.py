@@ -1,7 +1,7 @@
 import abc
 
 from functools import partial
-from typing import Any, Iterable, List, Union
+from typing import Any, Iterable
 
 import torch
 import torch.nn as nn
@@ -50,14 +50,14 @@ class RL4COLitModule(LightningModule, metaclass=abc.ABCMeta):
         env: RL4COEnvBase,
         policy: nn.Module,
         batch_size: int = 512,
-        val_batch_size: Union[List[int], int] = None,
-        test_batch_size: Union[List[int], int] = None,
+        val_batch_size: list[int] | int = None,
+        test_batch_size: list[int] | int = None,
         train_data_size: int = 100_000,
         val_data_size: int = 10_000,
         test_data_size: int = 10_000,
-        optimizer: Union[str, torch.optim.Optimizer, partial] = "Adam",
+        optimizer: str | torch.optim.Optimizer | partial = "Adam",
         optimizer_kwargs: dict = {"lr": 1e-4},
-        lr_scheduler: Union[str, torch.optim.lr_scheduler.LRScheduler, partial] = None,
+        lr_scheduler: str | torch.optim.lr_scheduler.LRScheduler | partial = None,
         lr_scheduler_kwargs: dict = {
             "milestones": [80, 95],
             "gamma": 0.1,
@@ -96,11 +96,11 @@ class RL4COLitModule(LightningModule, metaclass=abc.ABCMeta):
             "test_data_size": test_data_size,
         }
 
-        self._optimizer_name_or_cls: Union[str, torch.optim.Optimizer] = optimizer
+        self._optimizer_name_or_cls: str | torch.optim.Optimizer = optimizer
         self.optimizer_kwargs: dict = optimizer_kwargs
-        self._lr_scheduler_name_or_cls: Union[
-            str, torch.optim.lr_scheduler.LRScheduler
-        ] = lr_scheduler
+        self._lr_scheduler_name_or_cls: str | torch.optim.lr_scheduler.LRScheduler = (
+            lr_scheduler
+        )
         self.lr_scheduler_kwargs: dict = lr_scheduler_kwargs
         self.lr_scheduler_interval: str = lr_scheduler_interval
         self.lr_scheduler_monitor: str = lr_scheduler_monitor
@@ -214,7 +214,7 @@ class RL4COLitModule(LightningModule, metaclass=abc.ABCMeta):
             }
 
     def log_metrics(
-        self, metric_dict: dict, phase: str, dataloader_idx: Union[int, None] = None
+        self, metric_dict: dict, phase: str, dataloader_idx: int | None = None
     ):
         """Log metrics to logger and progress bar"""
         metrics = getattr(self, f"{phase}_metrics")
@@ -222,9 +222,9 @@ class RL4COLitModule(LightningModule, metaclass=abc.ABCMeta):
         if dataloader_idx is not None and self.dataloader_names is not None:
             dataloader_name = "/" + self.dataloader_names[dataloader_idx]
         metrics = {
-            f"{phase}/{k}{dataloader_name}": v.mean()
-            if isinstance(v, torch.Tensor)
-            else v
+            f"{phase}/{k}{dataloader_name}": (
+                v.mean() if isinstance(v, torch.Tensor) else v
+            )
             for k, v in metric_dict.items()
             if k in metrics
         }

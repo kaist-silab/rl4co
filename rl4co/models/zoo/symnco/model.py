@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Callable
 
 import torch.nn as nn
 
@@ -37,11 +37,11 @@ class SymNCO(REINFORCE):
     def __init__(
         self,
         env: RL4COEnvBase,
-        policy: Union[nn.Module, SymNCOPolicy] = None,
+        policy: nn.Module | SymNCOPolicy = None,
         policy_kwargs: dict = {},
         baseline: str = "symnco",
         num_augment: int = 4,
-        augment_fn: Union[str, callable] = "symmetric",
+        augment_fn: str | Callable = "symmetric",
         feats: list = None,
         alpha: float = 0.2,
         beta: float = 1,

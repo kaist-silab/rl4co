@@ -1,6 +1,6 @@
 import copy
 
-from typing import Any, Union
+from typing import Any
 
 import torch
 import torch.nn as nn
@@ -55,7 +55,7 @@ class StepwisePPO(RL4COLitModule):
         metrics: dict = {
             "train": ["loss", "surrogate_loss", "value_loss", "entropy"],
         },
-        reward_scale: Union[str, int] = None,
+        reward_scale: str | int = None,
         **kwargs,
     ):
         super().__init__(env, policy, metrics=metrics, batch_size=batch_size, **kwargs)

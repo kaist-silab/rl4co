@@ -1,9 +1,7 @@
 from functools import partial
-from typing import Optional, Type, Union
-import math
+from typing import Optional, Type
 
 from tensordict import TensorDict
-import torch
 
 from rl4co.envs import RL4COEnvBase, get_env
 from rl4co.models.common.constructive.nonautoregressive import (
@@ -13,7 +11,7 @@ from rl4co.models.common.constructive.nonautoregressive import (
 from rl4co.models.zoo.deepaco.antsystem import AntSystem
 from rl4co.models.zoo.nargnn.encoder import NARGNNEncoder
 from rl4co.utils.decoding import modify_logits_for_top_k_filtering, modify_logits_for_top_p_filtering
-from rl4co.utils.ops import batchify, get_distance_matrix, unbatchify
+from rl4co.utils.ops import batchify, unbatchify
 from rl4co.utils.utils import merge_with_defaults
 
 
@@ -43,9 +41,9 @@ class DeepACOPolicy(NonAutoregressivePolicy):
         top_k: int = 0,
         aco_class: Optional[Type[AntSystem]] = None,
         aco_kwargs: dict = {},
-        train_with_local_search: bool = False,
-        n_ants: Optional[Union[int, dict]] = None,
-        n_iterations: Optional[Union[int, dict]] = None,
+        train_with_local_search: bool = True,
+        n_ants: Optional[int | dict] = None,
+        n_iterations: Optional[int | dict] = None,
         **encoder_kwargs,
     ):
         if encoder is None:
@@ -76,7 +74,7 @@ class DeepACOPolicy(NonAutoregressivePolicy):
     def forward(
         self,
         td_initial: TensorDict,
-        env: Optional[Union[str, RL4COEnvBase]] = None,
+        env: Optional[str | RL4COEnvBase] = None,
         phase: str = "train",
         return_actions: bool = True,
         return_hidden: bool = True,
@@ -89,7 +87,9 @@ class DeepACOPolicy(NonAutoregressivePolicy):
         """
         n_ants = self.n_ants[phase]
         # Instantiate environment if needed
-        if (phase != "train" or self.train_with_local_search) and (env is None or isinstance(env, str)):
+        if (phase != "train" or self.train_with_local_search) and (
+            env is None or isinstance(env, str)
+        ):
             env_name = self.env_name if env is None else env
             env = get_env(env_name)
         else:
@@ -97,7 +97,8 @@ class DeepACOPolicy(NonAutoregressivePolicy):
 
         if phase == "train":
             select_start_nodes_fn = partial(
-                self.aco_class.select_start_node_fn, start_node=self.aco_kwargs.get("start_node", None)
+                self.aco_class.select_start_node_fn,
+                start_node=self.aco_kwargs.get("start_node", None),
             )
             decoding_kwargs.update(
                 {

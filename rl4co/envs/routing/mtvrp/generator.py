@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Union
+from typing import Callable, Tuple
 
 import torch
 
@@ -31,7 +31,13 @@ def get_vehicle_capacity(num_loc: int) -> int:
 VARIANT_GENERATION_PRESETS = {
     "all": {"O": 0.5, "TW": 0.5, "L": 0.5, "B": 0.5},
     "single_feat": {"O": 0.5, "TW": 0.5, "L": 0.5, "B": 0.5},
-    "single_feat_otw": {"O": 0.5, "TW": 0.5, "L": 0.5, "B": 0.5, "OTW": 0.5}, # same training as Zhou et al. 2024
+    "single_feat_otw": {
+        "O": 0.5,
+        "TW": 0.5,
+        "L": 0.5,
+        "B": 0.5,
+        "OTW": 0.5,
+    },  # same training as Zhou et al. 2024
     "cvrp": {"O": 0.0, "TW": 0.0, "L": 0.0, "B": 0.0},
     "ovrp": {"O": 1.0, "TW": 0.0, "L": 0.0, "B": 0.0},
     "vrpb": {"O": 0.0, "TW": 0.0, "L": 0.0, "B": 1.0},
@@ -56,7 +62,7 @@ class MTVRPGenerator(Generator):
     Class to generate instances of the MTVRP problem.
     If a variant is declared and Subsample is True, the generator will sample the problem based on the variant probabilities.
     By default, we use Mixed-Batch Training as in Berto et al. 2024 (RouteFinder), i.e. one batch can contain multiple variants.
-    
+
     Example presets:
     - "all": Sample uniformly from 16 variants
     - "single_feat": Sample uniformly between CVRP, OVRP, VRPB, VRPL, VRPTW (as done in Liu et al. 2024 (MTPOMO))
@@ -88,7 +94,7 @@ class MTVRPGenerator(Generator):
         num_loc: int = 20,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
+        loc_distribution: int | float | str | type | Callable = Uniform,
         capacity: float = None,
         min_demand: int = 1,
         max_demand: int = 10,
@@ -133,9 +139,9 @@ class MTVRPGenerator(Generator):
         self.distance_limit = distance_limit
         self.speed = speed
 
-        assert not (subsample and (variant_preset is None)), (
-            "Cannot use subsample if variant_preset is not specified. "
-        )
+        assert not (
+            subsample and (variant_preset is None)
+        ), "Cannot use subsample if variant_preset is not specified. "
         if variant_preset is not None:
             log.info(f"Using variant generation preset {variant_preset}")
             variant_probs = VARIANT_GENERATION_PRESETS.get(variant_preset)
@@ -226,8 +232,6 @@ class MTVRPGenerator(Generator):
             # Not subsampling problems, i.e. return tensordict with all attributes
             return td
 
-
-
     def subsample_problems(self, td):
         """Create subproblems starting from seed probabilities depending on their variant.
         If random seed sampled in [0, 1] in batch is greater than prob, remove the constraint
@@ -304,7 +308,9 @@ class MTVRPGenerator(Generator):
     def _default_backhaul(td, remove):
         # by default, where there is a backhaul, linehaul is 0. therefore, we add backhaul to linehaul
         # and set backhaul to 0 where we want to remove backhaul
-        td["demand_linehaul"][remove] = td["demand_linehaul"][remove] + td["demand_backhaul"][remove]
+        td["demand_linehaul"][remove] = (
+            td["demand_linehaul"][remove] + td["demand_backhaul"][remove]
+        )
         td["demand_backhaul"][remove] = 0
         return td
 
@@ -346,9 +352,7 @@ class MTVRPGenerator(Generator):
         backhaul_demand = (
             backhaul_demand * ~is_linehaul
         )  # keep only values where they are not linehauls
-        linehaul_demand = (
-            linehaul_demand * is_linehaul
-        )
+        linehaul_demand = linehaul_demand * is_linehaul
         return linehaul_demand, backhaul_demand
 
     def generate_time_windows(
@@ -429,7 +433,7 @@ class MTVRPGenerator(Generator):
     def print_presets():
         for key, value in VARIANT_GENERATION_PRESETS.items():
             print(f"{key}: {value}")
-            
+
     @staticmethod
     def available_variants(*args, **kwargs):
         # remove 'all', 'single_feat' from the list

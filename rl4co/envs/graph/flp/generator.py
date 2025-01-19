@@ -1,6 +1,6 @@
 import math
 
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -37,7 +37,7 @@ class FLPGenerator(Generator):
         num_loc: int = 100,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
+        loc_distribution: int | float | str | type | Callable = Uniform,
         to_choose: int = 10,
         **kwargs,
     ):

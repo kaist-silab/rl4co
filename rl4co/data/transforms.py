@@ -1,5 +1,7 @@
 import math
-from typing import Union
+
+from typing import Callable
+
 import torch
 
 from tensordict.tensordict import TensorDict
@@ -7,7 +9,6 @@ from torch import Tensor
 
 from rl4co.utils.ops import batchify
 from rl4co.utils.pylogger import get_pylogger
-
 
 log = get_pylogger(__name__)
 
@@ -91,14 +92,16 @@ def min_max_normalize(x):
     return (x - x.min()) / (x.max() - x.min())
 
 
-def get_augment_function(augment_fn: Union[str, callable]):
-    if callable(augment_fn):
+def get_augment_function(augment_fn: str | Callable):
+    if isinstance(augment_fn, Callable):
         return augment_fn
     if augment_fn == "dihedral8":
         return dihedral_8_augmentation_wrapper
     if augment_fn == "symmetric":
         return symmetric_augmentation
-    raise ValueError(f"Unknown augment_fn: {augment_fn}. Available options: 'symmetric', 'dihedral8' or a custom callable")
+    raise ValueError(
+        f"Unknown augment_fn: {augment_fn}. Available options: 'symmetric', 'dihedral8' or a custom callable"
+    )
 
 
 class StateAugmentation(object):
@@ -106,7 +109,7 @@ class StateAugmentation(object):
 
     Args:
         num_augment: number of augmentations
-        augment_fn: augmentation function to use, e.g. 'symmetric' (default) or 'dihedral8', if callable, 
+        augment_fn: augmentation function to use, e.g. 'symmetric' (default) or 'dihedral8', if callable,
             then use the function directly. If 'dihedral8', then num_augment must be 8
         first_aug_identity: whether to augment the first data point too
         normalize: whether to normalize the augmented data
@@ -116,7 +119,7 @@ class StateAugmentation(object):
     def __init__(
         self,
         num_augment: int = 8,
-        augment_fn: Union[str, callable] = 'symmetric', 
+        augment_fn: str | Callable = "symmetric",
         first_aug_identity: bool = True,
         normalize: bool = False,
         feats: list = None,

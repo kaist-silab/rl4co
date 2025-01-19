@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Callable
 
 import torch.nn as nn
 
@@ -46,7 +46,7 @@ class POMO(REINFORCE):
         policy_kwargs={},
         baseline: str = "shared",
         num_augment: int = 8,
-        augment_fn: Union[str, callable] = "dihedral8",
+        augment_fn: str | Callable = "dihedral8",
         first_aug_identity: bool = True,
         feats: list = None,
         num_starts: int = None,

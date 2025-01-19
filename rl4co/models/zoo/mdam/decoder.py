@@ -1,7 +1,6 @@
 import math
 
 from dataclasses import dataclass
-from typing import Union
 
 import torch
 import torch.nn as nn
@@ -104,7 +103,7 @@ class MDAMDecoder(nn.Module):
         self,
         td: TensorDict,
         encoded_inputs: torch.Tensor,
-        env: Union[str, RL4COEnvBase],
+        env: str | RL4COEnvBase,
         attn,
         V,
         h_old,
@@ -298,9 +297,9 @@ class MDAMDecoder(nn.Module):
         )
         if self.mask_inner:
             assert self.mask_logits, "Cannot mask inner without masking logits"
-            compatibility[
-                ~mask[None, :, None, None, :].expand_as(compatibility)
-            ] = -math.inf
+            compatibility[~mask[None, :, None, None, :].expand_as(compatibility)] = (
+                -math.inf
+            )
 
         # Batch matrix multiplication to compute heads (n_heads, batch_size, num_steps, val_size)
         heads = torch.matmul(F.softmax(compatibility, dim=-1), glimpse_V)

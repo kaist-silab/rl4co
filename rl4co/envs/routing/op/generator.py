@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -41,13 +41,13 @@ class OPGenerator(Generator):
         num_loc: int = 20,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
-        depot_distribution: Union[int, float, str, type, Callable] = None,
+        loc_distribution: int | float | str | type | Callable = Uniform,
+        depot_distribution: int | float | str | type | Callable = None,
         min_prize: float = 1.0,
         max_prize: float = 1.0,
-        prize_distribution: Union[int, float, type, Callable] = Uniform,
+        prize_distribution: int | float | type | Callable = Uniform,
         prize_type: str = "dist",
-        max_length: Union[float, torch.Tensor] = None,
+        max_length: float | torch.Tensor = None,
         **kwargs,
     ):
         self.num_loc = num_loc
@@ -70,9 +70,11 @@ class OPGenerator(Generator):
         if kwargs.get("depot_sampler", None) is not None:
             self.depot_sampler = kwargs["depot_sampler"]
         else:
-            self.depot_sampler = get_sampler(
-                "depot", depot_distribution, min_loc, max_loc, **kwargs
-            ) if depot_distribution is not None else None
+            self.depot_sampler = (
+                get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs)
+                if depot_distribution is not None
+                else None
+            )
 
         # Prize distribution
         if kwargs.get("prize_sampler", None) is not None:

@@ -1,6 +1,6 @@
 import abc
 
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -33,7 +33,7 @@ class Generator(metaclass=abc.ABCMeta):
 
 def get_sampler(
     val_name: str,
-    distribution: Union[int, float, str, type, Callable],
+    distribution: int | float | str | type | Callable,
     low: float = 0,
     high: float = 1.0,
     **kwargs,

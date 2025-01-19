@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch.nn as nn
 
 from rl4co.envs import RL4COEnvBase
@@ -47,7 +45,7 @@ class PolyNetPolicy(AutoregressivePolicy):
         num_heads: int = 8,
         normalization: str = "instance",
         feedforward_hidden: int = 512,
-        env_name: Union[str, RL4COEnvBase] = "tsp",
+        env_name: str | RL4COEnvBase = "tsp",
         temperature: float = 1.0,
         tanh_clipping: float = 10.0,
         mask_logits: bool = True,

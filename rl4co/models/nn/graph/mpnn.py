@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -115,7 +115,7 @@ class MessagePassingEncoder(nn.Module):
 
     # def forward(self, x, mask=None):
     def forward(
-        self, td: TensorDict, mask: Union[Tensor, None] = None
+        self, td: TensorDict, mask: Tensor | None = None
     ) -> Tuple[Tensor, Tensor]:
         init_h = self.init_embedding(td)
         num_node = init_h.size(-2)

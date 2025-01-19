@@ -1,12 +1,12 @@
-from typing import Union, Callable
+from typing import Callable
 
 import torch
 
-from torch.distributions import Uniform
 from tensordict.tensordict import TensorDict
+from torch.distributions import Uniform
 
+from rl4co.envs.common.utils import Generator, get_sampler
 from rl4co.utils.pylogger import get_pylogger
-from rl4co.envs.common.utils import get_sampler, Generator
 
 log = get_pylogger(__name__)
 
@@ -22,7 +22,7 @@ class SVRPGenerator(Generator):
         max_skill: maximum value for the technic skill
         skill_distribution: distribution for the technic skill
         tech_costs: list of the technic costs
-    
+
     Returns:
         A TensorDict with the following keys:
             locs [batch_size, num_loc, 2]: locations of each customer
@@ -30,21 +30,18 @@ class SVRPGenerator(Generator):
             techs [batch_size, num_loc]: technic requirements of each customer
             skills [batch_size, num_loc]: skills of the vehicles
     """
+
     def __init__(
         self,
         num_loc: int = 20,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[
-            int, float, str, type, Callable
-        ] = Uniform,
-        depot_distribution: Union[
-            int, float, str, type, Callable
-        ] = None,
+        loc_distribution: int | float | str | type | Callable = Uniform,
+        depot_distribution: int | float | str | type | Callable = None,
         min_skill: float = 1.0,
         max_skill: float = 10.0,
         tech_costs: list = [1, 2, 3],
-        **kwargs
+        **kwargs,
     ):
         self.num_loc = num_loc
         self.min_loc = min_loc
@@ -58,13 +55,19 @@ class SVRPGenerator(Generator):
         if kwargs.get("loc_sampler", None) is not None:
             self.loc_sampler = kwargs["loc_sampler"]
         else:
-            self.loc_sampler = get_sampler("loc", loc_distribution, min_loc, max_loc, **kwargs)
+            self.loc_sampler = get_sampler(
+                "loc", loc_distribution, min_loc, max_loc, **kwargs
+            )
 
         # Depot distribution
         if kwargs.get("depot_sampler", None) is not None:
             self.depot_sampler = kwargs["depot_sampler"]
         else:
-            self.depot_sampler = get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs) if depot_distribution is not None else None
+            self.depot_sampler = (
+                get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs)
+                if depot_distribution is not None
+                else None
+            )
 
     def _generate(self, batch_size) -> TensorDict:
         """Generate data for the basic Skill-VRP. The data consists of the locations of the customers,
@@ -84,15 +87,14 @@ class SVRPGenerator(Generator):
 
         # Initialize technicians and sort ascendingly
         techs, _ = torch.sort(
-            torch.FloatTensor(*batch_size, self.num_tech, 1)
-            .uniform_(self.min_skill, self.max_skill),
+            torch.FloatTensor(*batch_size, self.num_tech, 1).uniform_(
+                self.min_skill, self.max_skill
+            ),
             dim=-2,
         )
 
         # Initialize the skills
-        skills = (
-            torch.FloatTensor(*batch_size, self.num_loc, 1).uniform_(0, 1)
-        )
+        skills = torch.FloatTensor(*batch_size, self.num_loc, 1).uniform_(0, 1)
         # scale skills
         skills = torch.max(techs, dim=1, keepdim=True).values * skills
         td = TensorDict(

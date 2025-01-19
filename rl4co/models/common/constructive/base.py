@@ -1,6 +1,6 @@
 import abc
 
-from typing import Any, Callable, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Tuple
 
 import torch.nn as nn
 
@@ -121,8 +121,8 @@ class ConstructivePolicy(nn.Module):
 
     def __init__(
         self,
-        encoder: Union[ConstructiveEncoder, Callable],
-        decoder: Union[ConstructiveDecoder, Callable],
+        encoder: ConstructiveEncoder | Callable,
+        decoder: ConstructiveDecoder | Callable,
         env_name: str = "tsp",
         temperature: float = 1.0,
         tanh_clipping: float = 0,
@@ -157,7 +157,7 @@ class ConstructivePolicy(nn.Module):
     def forward(
         self,
         td: TensorDict,
-        env: Optional[Union[str, RL4COEnvBase]] = None,
+        env: Optional[str | RL4COEnvBase] = None,
         phase: str = "train",
         calc_reward: bool = True,
         return_actions: bool = True,

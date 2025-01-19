@@ -1,15 +1,7 @@
 import os
 import platform
 from ctypes import (
-    Structure,
-    CDLL,
-    POINTER,
-    c_int,
-    c_double,
-    c_char,
-    sizeof,
-    cast,
-    byref,
+    Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
 )
 from dataclasses import dataclass
 from typing import List

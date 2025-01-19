@@ -1,5 +1,3 @@
-from typing import Union
-
 from rl4co.envs.common.base import RL4COEnvBase
 from rl4co.models.rl import REINFORCE
 from rl4co.models.rl.reinforce.baselines import REINFORCEBaseline
@@ -23,7 +21,7 @@ class HeterogeneousAttentionModel(REINFORCE):
         self,
         env: RL4COEnvBase,
         policy: HeterogeneousAttentionModelPolicy = None,
-        baseline: Union[REINFORCEBaseline, str] = "rollout",
+        baseline: REINFORCEBaseline | str = "rollout",
         policy_kwargs={},
         baseline_kwargs={},
         **kwargs,

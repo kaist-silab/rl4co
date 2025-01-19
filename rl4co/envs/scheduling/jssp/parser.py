@@ -1,11 +1,11 @@
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import Tuple
 
 import torch
 
 from tensordict import TensorDict
 
-ProcessingData = List[Tuple[int, int]]
+ProcessingData = list[Tuple[int, int]]
 
 
 def parse_job_line(line: Tuple[int]) -> Tuple[ProcessingData]:
@@ -100,7 +100,7 @@ def read(loc: Path, max_ops=None):
     return td, num_jobs, num_machines, max_ops_per_job
 
 
-def file2lines(loc: Union[Path, str]) -> List[List[int]]:
+def file2lines(loc: Path | str) -> list[list[int]]:
     with open(loc, "r") as fh:
         lines = [line for line in fh.readlines() if line.strip()]
 

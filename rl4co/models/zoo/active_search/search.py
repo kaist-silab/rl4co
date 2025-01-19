@@ -1,7 +1,7 @@
 import time
 
 from functools import partial
-from typing import Any, Union
+from typing import Any
 
 import torch
 
@@ -41,7 +41,7 @@ class ActiveSearch(TransductiveModel):
         self,
         env,
         policy,
-        dataset: Union[Dataset, str],
+        dataset: Dataset | str,
         batch_size: int = 1,
         max_iters: int = 200,
         augment_size: int = 8,
@@ -49,7 +49,7 @@ class ActiveSearch(TransductiveModel):
         num_parallel_runs: int = 1,
         max_runtime: int = 86_400,
         save_path: str = None,
-        optimizer: Union[str, torch.optim.Optimizer, partial] = "Adam",
+        optimizer: str | torch.optim.Optimizer | partial = "Adam",
         optimizer_kwargs: dict = {"lr": 2.6e-4, "weight_decay": 1e-6},
         **kwargs,
     ):

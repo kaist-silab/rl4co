@@ -1,6 +1,6 @@
 import logging
 
-from typing import Any, Optional, Union
+from typing import Any, Callable, Optional
 
 import torch
 
@@ -52,7 +52,7 @@ class PolyNet(REINFORCE):
         policy_kwargs={},
         baseline: str = "shared",
         num_augment: int = 8,
-        augment_fn: Union[str, callable] = "dihedral8",
+        augment_fn: str | Callable = "dihedral8",
         first_aug_identity: bool = True,
         feats: list = None,
         **kwargs,

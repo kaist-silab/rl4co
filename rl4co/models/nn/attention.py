@@ -2,7 +2,7 @@ import itertools
 import math
 import warnings
 
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
 
 import torch
 import torch.nn as nn
@@ -171,7 +171,7 @@ class MultiHeadCrossAttention(nn.Module):
         attention_dropout: float = 0.0,
         device: str = None,
         dtype: torch.dtype = None,
-        sdpa_fn: Optional[Union[Callable, nn.Module]] = None,
+        sdpa_fn: Optional[Callable | nn.Module] = None,
     ) -> None:
         factory_kwargs = {"device": device, "dtype": dtype}
         super().__init__()
@@ -249,7 +249,7 @@ class PointerAttention(nn.Module):
         mask_inner: bool = True,
         out_bias: bool = False,
         check_nan: bool = True,
-        sdpa_fn: Optional[Union[Callable, str]] = "default",
+        sdpa_fn: Callable | str = "default",
         **kwargs,
     ):
         super(PointerAttention, self).__init__()

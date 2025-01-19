@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import hydra
 import lightning as L
@@ -44,10 +44,10 @@ def run(cfg: DictConfig) -> Tuple[dict, dict]:
     model: LightningModule = hydra.utils.instantiate(cfg.model, env)
 
     log.info("Instantiating callbacks...")
-    callbacks: List[Callback] = utils.instantiate_callbacks(cfg.get("callbacks"))
+    callbacks: list[Callback] = utils.instantiate_callbacks(cfg.get("callbacks"))
 
     log.info("Instantiating loggers...")
-    logger: List[Logger] = utils.instantiate_loggers(cfg.get("logger"), model)
+    logger: list[Logger] = utils.instantiate_loggers(cfg.get("logger"), model)
 
     log.info("Instantiating trainer...")
     trainer: RL4COTrainer = hydra.utils.instantiate(

@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from tensordict import TensorDict
 import torch
@@ -27,7 +27,7 @@ class DeepACO(REINFORCE):
         self,
         env: RL4COEnvBase,
         policy: Optional[DeepACOPolicy] = None,
-        baseline: Union[REINFORCEBaseline, str] = "no",  # Shared baseline is manually implemented
+        baseline: REINFORCEBaseline | str = "no",  # Shared baseline is manually implemented
         train_with_local_search: bool = True,
         ls_reward_aug_W: float = 0.95,
         policy_kwargs: dict = {},
@@ -45,7 +45,11 @@ class DeepACO(REINFORCE):
         self.ls_reward_aug_W = ls_reward_aug_W
 
     def shared_step(
-        self, batch: Any, batch_idx: int, phase: str, dataloader_idx: Optional[int] = None
+        self,
+        batch: Any,
+        batch_idx: int,
+        phase: str,
+        dataloader_idx: int | None = None,
     ):
         td = self.env.reset(batch)
         # Perform forward pass (i.e., constructing solution and computing log-likelihoods)

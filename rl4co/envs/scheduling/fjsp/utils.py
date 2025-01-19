@@ -1,6 +1,6 @@
 import logging
 
-from typing import List, Tuple, Union
+from typing import Tuple
 
 import torch
 
@@ -17,7 +17,7 @@ def get_op_features(td: TensorDict):
 
 
 def cat_and_norm_features(
-    td: TensorDict, feats: List[str], time_feats: List[str], norm_const: int
+    td: TensorDict, feats: list[str], time_feats: list[str], norm_const: int
 ):
     # logger.info(f"will scale the features {','.join(time_feats)} with a constant ({norm_const})")
     feature_list = []
@@ -34,8 +34,8 @@ def view(
     tensor: Tensor,
     idx: Tuple[Tensor],
     pad_mask: Tensor,
-    new_shape: Union[Size, List[int]],
-    pad_value: Union[float, int],
+    new_shape: Size | list[int],
+    pad_value: float | int,
 ):
     # convert mask specifying which entries are padded into mask specifying which entries to keep
     mask = ~pad_mask
@@ -67,9 +67,7 @@ def _get_idx_for_job_op_view(td: TensorDict) -> tuple:
     return b, j, o
 
 
-def get_job_op_view(
-    td: TensorDict, keys: List[str] = [], pad_value: Union[float, int] = 0
-):
+def get_job_op_view(td: TensorDict, keys: list[str] = [], pad_value: float | int = 0):
     """This function reshapes all tensors of the tensordict from a flat operations-only view
     to a nested job-operation view and creates a new tensordict from it.
     :param _type_ td: tensordict
@@ -103,7 +101,7 @@ def get_job_op_view(
     return {"proc_times": new_proc_times_view, **new_views}
 
 
-def blockify(td, tensor: Tensor, pad_value: Union[float, int] = 0):
+def blockify(td, tensor: Tensor, pad_value: float | int = 0):
     assert len(tensor.shape) in [
         2,
         3,
@@ -122,7 +120,7 @@ def blockify(td, tensor: Tensor, pad_value: Union[float, int] = 0):
 
 
 def unblockify(
-    td: TensorDict, tensor: Tensor, mask: Tensor = None, pad_value: Union[float, int] = 0
+    td: TensorDict, tensor: Tensor, mask: Tensor = None, pad_value: float | int = 0
 ):
     assert len(tensor.shape) in [
         3,

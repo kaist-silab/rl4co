@@ -1,5 +1,3 @@
-from typing import Union
-
 from rl4co.envs.common.base import RL4COEnvBase
 from rl4co.models.rl import REINFORCE, StepwisePPO
 from rl4co.models.rl.reinforce.baselines import REINFORCEBaseline
@@ -54,7 +52,7 @@ class L2DModel(REINFORCE):
         self,
         env: RL4COEnvBase,
         policy: L2DPolicy = None,
-        baseline: Union[REINFORCEBaseline, str] = "rollout",
+        baseline: REINFORCEBaseline | str = "rollout",
         policy_kwargs={},
         baseline_kwargs={},
         **kwargs,

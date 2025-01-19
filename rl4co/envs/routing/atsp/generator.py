@@ -1,12 +1,12 @@
-from typing import Union, Callable
+from typing import Callable
 
 import torch
 
-from torch.distributions import Uniform
 from tensordict.tensordict import TensorDict
+from torch.distributions import Uniform
 
+from rl4co.envs.common.utils import Generator, get_sampler
 from rl4co.utils.pylogger import get_pylogger
-from rl4co.envs.common.utils import get_sampler, Generator
 
 log = get_pylogger(__name__)
 
@@ -27,16 +27,15 @@ class ATSPGenerator(Generator):
         A TensorDict with the following keys:
             locs [batch_size, num_loc, 2]: locations of each customer
     """
+
     def __init__(
         self,
         num_loc: int = 10,
         min_dist: float = 0.0,
         max_dist: float = 1.0,
-        dist_distribution: Union[
-            int, float, str, type, Callable
-        ] = Uniform,
+        dist_distribution: int | float | str | type | Callable = Uniform,
         tmat_class: bool = True,
-        **kwargs
+        **kwargs,
     ):
         self.num_loc = num_loc
         self.min_dist = min_dist

@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -32,7 +32,7 @@ class TSPGenerator(Generator):
         min_loc: float = 0.0,
         max_loc: float = 1.0,
         init_sol_type: str = "random",
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
+        loc_distribution: int | float | str | type | Callable = Uniform,
         **kwargs,
     ):
         self.num_loc = num_loc
