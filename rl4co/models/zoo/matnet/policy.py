@@ -1,5 +1,4 @@
 from math import factorial
-from typing import List
 
 import torch
 import torch.nn as nn
@@ -110,7 +109,7 @@ class MultiStageFFSPPolicy(nn.Module):
         super().__init__()
         self.stage_cnt = stage_cnt
 
-        self.encoders: List[MatNetEncoder] = nn.ModuleList(
+        self.encoders: list[MatNetEncoder] = nn.ModuleList(
             [
                 MatNetEncoder(
                     embed_dim=embed_dim,
@@ -124,7 +123,7 @@ class MultiStageFFSPPolicy(nn.Module):
                 for _ in range(self.stage_cnt)
             ]
         )
-        self.decoders: List[MultiStageFFSPDecoder] = nn.ModuleList(
+        self.decoders: list[MultiStageFFSPDecoder] = nn.ModuleList(
             [
                 MultiStageFFSPDecoder(embed_dim, num_heads, use_graph_context)
                 for _ in range(self.stage_cnt)

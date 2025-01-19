@@ -1,7 +1,7 @@
 import time
 
 from functools import partial
-from typing import Any, List, Union
+from typing import Any
 
 import torch
 
@@ -51,10 +51,10 @@ class EAS(TransductiveModel):
         self,
         env,
         policy,
-        dataset: Union[Dataset, str],
+        dataset: Dataset | str,
         use_eas_embedding: bool = True,
         use_eas_layer: bool = False,
-        eas_emb_cache_keys: List[str] = ["logit_key"],
+        eas_emb_cache_keys: list[str] = ["logit_key"],
         eas_lambda: float = 0.013,
         batch_size: int = 2,
         max_iters: int = 200,
@@ -64,7 +64,7 @@ class EAS(TransductiveModel):
         baseline: str = "multistart",
         max_runtime: int = 86_400,
         save_path: str = None,
-        optimizer: Union[str, torch.optim.Optimizer, partial] = "Adam",
+        optimizer: str | torch.optim.Optimizer | partial = "Adam",
         optimizer_kwargs: dict = {"lr": 0.0041, "weight_decay": 1e-6},
         verbose: bool = True,
         **kwargs,

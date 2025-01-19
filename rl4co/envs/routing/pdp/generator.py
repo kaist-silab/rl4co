@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -36,8 +36,8 @@ class PDPGenerator(Generator):
         min_loc: float = 0.0,
         max_loc: float = 1.0,
         init_sol_type: str = "random",
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
-        depot_distribution: Union[int, float, str, type, Callable] = None,
+        loc_distribution: int | float | str | type | Callable = Uniform,
+        depot_distribution: int | float | str | type | Callable = None,
         **kwargs,
     ):
         self.num_loc = num_loc
@@ -64,9 +64,11 @@ class PDPGenerator(Generator):
         if kwargs.get("depot_sampler", None) is not None:
             self.depot_sampler = kwargs["depot_sampler"]
         else:
-            self.depot_sampler = get_sampler(
-                "depot", depot_distribution, min_loc, max_loc, **kwargs
-            ) if depot_distribution is not None else None
+            self.depot_sampler = (
+                get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs)
+                if depot_distribution is not None
+                else None
+            )
 
     def _generate(self, batch_size) -> TensorDict:
         # Sample locations: depot and customers

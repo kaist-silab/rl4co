@@ -1,6 +1,6 @@
 import abc
 
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from lightning.pytorch.utilities.types import STEP_OUTPUT
 from torch.utils.data import Dataset
@@ -33,7 +33,7 @@ class TransductiveModel(RL4COLitModule, metaclass=abc.ABCMeta):
         self,
         env,
         policy,
-        dataset: Union[Dataset, str],
+        dataset: Dataset | str,
         batch_size: int = 1,
         max_iters: int = 100,
         max_runtime: Optional[int] = 86_400,

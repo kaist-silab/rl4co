@@ -1,5 +1,3 @@
-from typing import Union
-
 from tensordict import TensorDict
 
 from rl4co.envs import RL4COEnvBase, get_env
@@ -60,7 +58,7 @@ class MDAMPolicy(AutoregressivePolicy):
     def forward(
         self,
         td: TensorDict,
-        env: Union[str, RL4COEnvBase] = None,
+        env: str | RL4COEnvBase = None,
         phase: str = "train",
         return_actions: bool = True,
         **decoder_kwargs,

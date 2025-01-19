@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 import torch
 
@@ -57,11 +57,11 @@ class CVRPGenerator(Generator):
         num_loc: int = 20,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
-        depot_distribution: Union[int, float, str, type, Callable] = None,
+        loc_distribution: int | float | str | type | Callable = Uniform,
+        depot_distribution: int | float | str | type | Callable = None,
         min_demand: int = 1,
         max_demand: int = 10,
-        demand_distribution: Union[int, float, type, Callable] = Uniform,
+        demand_distribution: int | float | type | Callable = Uniform,
         vehicle_capacity: float = 1.0,
         capacity: float = None,
         **kwargs,
@@ -85,9 +85,11 @@ class CVRPGenerator(Generator):
         if kwargs.get("depot_sampler", None) is not None:
             self.depot_sampler = kwargs["depot_sampler"]
         else:
-            self.depot_sampler = get_sampler(
-                "depot", depot_distribution, min_loc, max_loc, **kwargs
-            ) if depot_distribution is not None else None
+            self.depot_sampler = (
+                get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs)
+                if depot_distribution is not None
+                else None
+            )
 
         # Demand distribution
         if kwargs.get("demand_sampler", None) is not None:
@@ -114,7 +116,7 @@ class CVRPGenerator(Generator):
         self.capacity = capacity
 
     def _generate(self, batch_size) -> TensorDict:
-        
+
         # Sample locations: depot and customers
         if self.depot_sampler is not None:
             depot = self.depot_sampler.sample((*batch_size, 2))

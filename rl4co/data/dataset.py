@@ -1,5 +1,3 @@
-from typing import Union
-
 import tensordict
 import torch
 
@@ -35,7 +33,7 @@ class FastTdDataset(Dataset):
         return ExtraKeyDataset(self, value, key_name=key)
 
     @staticmethod
-    def collate_fn(batch: Union[dict, TensorDict]):
+    def collate_fn(batch: dict | TensorDict):
         """Collate function compatible with TensorDicts that reassembles a list of dicts."""
         return batch
 
@@ -66,7 +64,7 @@ class TensorDictDataset(Dataset):
         return ExtraKeyDataset(self, value, key_name=key)
 
     @staticmethod
-    def collate_fn(batch: Union[dict, TensorDict]):
+    def collate_fn(batch: dict | TensorDict):
         """Collate function compatible with TensorDicts that reassembles a list of dicts."""
         return TensorDict(
             {key: torch.stack([b[key] for b in batch]) for key in batch[0].keys()},
@@ -129,6 +127,6 @@ class TensorDictDatasetFastGeneration(Dataset):
         return self
 
     @staticmethod
-    def collate_fn(batch: Union[dict, TensorDict]):
+    def collate_fn(batch: dict | TensorDict):
         """Equivalent to collating with `lambda x: x`"""
         return batch

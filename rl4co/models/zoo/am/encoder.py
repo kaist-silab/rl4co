@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch.nn as nn
 
@@ -38,7 +38,7 @@ class AttentionModelEncoder(AutoregressiveEncoder):
         normalization: str = "batch",
         feedforward_hidden: int = 512,
         net: nn.Module = None,
-        sdpa_fn = None,
+        sdpa_fn=None,
         moe_kwargs: dict = None,
     ):
         super(AttentionModelEncoder, self).__init__()
@@ -68,7 +68,7 @@ class AttentionModelEncoder(AutoregressiveEncoder):
         )
 
     def forward(
-        self, td: TensorDict, mask: Union[Tensor, None] = None
+        self, td: TensorDict, mask: Tensor | None = None
     ) -> Tuple[Tensor, Tensor]:
         """Forward pass of the encoder.
         Transform the input TensorDict into a latent representation.

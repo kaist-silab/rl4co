@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Callable
 
 import torch.nn as nn
 
@@ -20,10 +20,10 @@ class MVMoE_POMO(POMO):
         self,
         env: RL4COEnvBase,
         policy: nn.Module = None,
-        policy_kwargs = {},
+        policy_kwargs={},
         baseline: str = "shared",
         num_augment: int = 8,
-        augment_fn: Union[str, callable] = "dihedral8",
+        augment_fn: str | Callable = "dihedral8",
         first_aug_identity: bool = True,
         feats: list = None,
         num_starts: int = None,
@@ -31,8 +31,20 @@ class MVMoE_POMO(POMO):
         **kwargs,
     ):
         if moe_kwargs is None:
-            moe_kwargs = {"encoder": {"hidden_act": "ReLU", "num_experts": 4, "k": 2, "noisy_gating": True},
-                          "decoder": {"light_version": True, "num_experts": 4, "k": 2, "noisy_gating": True}}
+            moe_kwargs = {
+                "encoder": {
+                    "hidden_act": "ReLU",
+                    "num_experts": 4,
+                    "k": 2,
+                    "noisy_gating": True,
+                },
+                "decoder": {
+                    "light_version": True,
+                    "num_experts": 4,
+                    "k": 2,
+                    "noisy_gating": True,
+                },
+            }
 
         if policy is None:
             policy_kwargs_ = {
@@ -45,8 +57,18 @@ class MVMoE_POMO(POMO):
             policy = AttentionModelPolicy(env_name=env.name, **policy_kwargs)
 
         # Initialize with the shared baseline
-        super(MVMoE_POMO, self).__init__(env, policy, policy_kwargs, baseline, num_augment, augment_fn,
-                                         first_aug_identity, feats, num_starts, **kwargs)
+        super(MVMoE_POMO, self).__init__(
+            env,
+            policy,
+            policy_kwargs,
+            baseline,
+            num_augment,
+            augment_fn,
+            first_aug_identity,
+            feats,
+            num_starts,
+            **kwargs,
+        )
 
 
 class MVMoE_AM(AttentionModel):
@@ -58,15 +80,28 @@ class MVMoE_AM(AttentionModel):
         self,
         env: RL4COEnvBase,
         policy: AttentionModelPolicy = None,
-        baseline: Union[REINFORCEBaseline, str] = "rollout",
+        baseline: REINFORCEBaseline | str = "rollout",
         policy_kwargs={},
         baseline_kwargs={},
         moe_kwargs: dict = None,
         **kwargs,
     ):
         if moe_kwargs is None:
-            moe_kwargs = {"encoder": {"hidden_act": "ReLU", "num_experts": 4, "k": 2, "noisy_gating": True},
-                          "decoder": {"light_version": True,  "out_bias": False, "num_experts": 4, "k": 2, "noisy_gating": True}}
+            moe_kwargs = {
+                "encoder": {
+                    "hidden_act": "ReLU",
+                    "num_experts": 4,
+                    "k": 2,
+                    "noisy_gating": True,
+                },
+                "decoder": {
+                    "light_version": True,
+                    "out_bias": False,
+                    "num_experts": 4,
+                    "k": 2,
+                    "noisy_gating": True,
+                },
+            }
 
         if policy is None:
             policy_kwargs_ = {
@@ -76,4 +111,6 @@ class MVMoE_AM(AttentionModel):
             policy = AttentionModelPolicy(env_name=env.name, **policy_kwargs)
 
         # Initialize with the shared baseline
-        super(MVMoE_AM, self).__init__(env, policy, baseline, policy_kwargs, baseline_kwargs, **kwargs)
+        super(MVMoE_AM, self).__init__(
+            env, policy, baseline, policy_kwargs, baseline_kwargs, **kwargs
+        )

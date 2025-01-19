@@ -1,5 +1,4 @@
 from functools import partial
-from typing import Union
 
 import torch
 
@@ -57,7 +56,7 @@ class MDAM(REINFORCE):
         self,
         env: RL4COEnvBase,
         policy: MDAMPolicy = None,
-        baseline: Union[REINFORCEBaseline, str] = "rollout",
+        baseline: REINFORCEBaseline | str = "rollout",
         policy_kwargs={},
         baseline_kwargs={},
         **kwargs,

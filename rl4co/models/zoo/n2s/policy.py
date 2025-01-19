@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch
 import torch.nn as nn
 
@@ -97,7 +95,7 @@ class N2SPolicy(ImprovementPolicy):
     def forward(
         self,
         td: TensorDict,
-        env: Union[str, RL4COEnvBase] = None,
+        env: str | RL4COEnvBase = None,
         phase: str = "train",
         return_actions: bool = True,
         return_embeds: bool = False,

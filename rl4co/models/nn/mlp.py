@@ -1,5 +1,3 @@
-from typing import List, Union
-
 import torch.nn as nn
 
 from rl4co.utils.pylogger import get_pylogger
@@ -12,8 +10,8 @@ class MLP(nn.Module):
         self,
         input_dim: int,
         output_dim: int,
-        num_neurons: List[int] = [64, 32],
-        dropout_probs: Union[None, List[float]] = None,
+        num_neurons: list[int] = [64, 32],
+        dropout_probs: None | list[float] = None,
         hidden_act: str = "ReLU",
         out_act: str = "Identity",
         input_norm: str = "None",

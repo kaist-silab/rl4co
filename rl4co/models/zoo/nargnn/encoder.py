@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
 
 import torch
 import torch.nn as nn
@@ -32,7 +32,7 @@ class EdgeHeatmapGenerator(nn.Module):
         self,
         embed_dim: int,
         num_layers: int,
-        act_fn: Union[str, Callable] = "silu",
+        act_fn: str | Callable = "silu",
         linear_bias: bool = True,
         undirected_graph: bool = True,
     ) -> None:
@@ -149,7 +149,9 @@ class NARGNNEncoder(NonAutoregressiveEncoder):
         )
 
         self.edge_embedding = (
-            env_edge_embedding(self.env_name, {"embed_dim": embed_dim, "k_sparse": k_sparse})
+            env_edge_embedding(
+                self.env_name, {"embed_dim": embed_dim, "k_sparse": k_sparse}
+            )
             if edge_embedding is None
             else edge_embedding
         )

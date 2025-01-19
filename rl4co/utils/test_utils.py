@@ -4,6 +4,8 @@ from rl4co.envs import (
     CVRPEnv,
     CVRPTWEnv,
     DPPEnv,
+    FLPEnv,
+    MCPEnv,
     MDPPEnv,
     MTSPEnv,
     OPEnv,
@@ -14,44 +16,43 @@ from rl4co.envs import (
     SMTWTPEnv,
     SPCTSPEnv,
     TSPEnv,
-    FLPEnv,
-    MCPEnv,
 )
 
 
 def get_env(name, size):
-    if name == "tsp":
-        env = TSPEnv(generator_params=dict(num_loc=size))
-    elif name == "cvrp":
-        env = CVRPEnv(generator_params=dict(num_loc=size))
-    elif name == "cvrptw":
-        env = CVRPTWEnv(generator_params=dict(num_loc=size))
-    elif name == "sdvrp":
-        env = SDVRPEnv(generator_params=dict(num_loc=size))
-    elif name == "pdp":
-        env = PDPEnv(generator_params=dict(num_loc=size))
-    elif name == "op":
-        env = OPEnv(generator_params=dict(num_loc=size))
-    elif name == "mtsp":
-        env = MTSPEnv(generator_params=dict(num_loc=size))
-    elif name == "pctsp":
-        env = PCTSPEnv(generator_params=dict(num_loc=size))
-    elif name == "spctsp":
-        env = SPCTSPEnv(generator_params=dict(num_loc=size))
-    elif name == "dpp":
-        env = DPPEnv()
-    elif name == "mdpp":
-        env = MDPPEnv()
-    elif name == "smtwtp":
-        env = SMTWTPEnv()
-    elif name == "pdp_ruin_repair":
-        env = PDPRuinRepairEnv()
-    elif name == "mcp":
-        env = MCPEnv()
-    elif name == "flp":
-        env = FLPEnv()
-    else:
-        raise ValueError(f"Unknown env_name: {name}")
+    match name:
+        case "tsp":
+            env = TSPEnv(generator_params=dict(num_loc=size))
+        case "cvrp":
+            env = CVRPEnv(generator_params=dict(num_loc=size))
+        case "cvrptw":
+            env = CVRPTWEnv(generator_params=dict(num_loc=size))
+        case "sdvrp":
+            env = SDVRPEnv(generator_params=dict(num_loc=size))
+        case "pdp":
+            env = PDPEnv(generator_params=dict(num_loc=size))
+        case "op":
+            env = OPEnv(generator_params=dict(num_loc=size))
+        case "mtsp":
+            env = MTSPEnv(generator_params=dict(num_loc=size))
+        case "pctsp":
+            env = PCTSPEnv(generator_params=dict(num_loc=size))
+        case "spctsp":
+            env = SPCTSPEnv(generator_params=dict(num_loc=size))
+        case "dpp":
+            env = DPPEnv()
+        case "mdpp":
+            env = MDPPEnv()
+        case "smtwtp":
+            env = SMTWTPEnv()
+        case "pdp_ruin_repair":
+            env = PDPRuinRepairEnv()
+        case "mcp":
+            env = MCPEnv()
+        case "flp":
+            env = FLPEnv()
+        case _:
+            raise ValueError(f"Unknown env_name: {name}")
 
     return env.transform()
 

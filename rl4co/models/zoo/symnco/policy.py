@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch.nn as nn
 
 from tensordict.tensordict import TensorDict
@@ -62,7 +60,7 @@ class SymNCOPolicy(AttentionModelPolicy):
     def forward(
         self,
         td: TensorDict,
-        env: Union[str, RL4COEnvBase] = None,
+        env: str | RL4COEnvBase = None,
         phase: str = "train",
         return_actions: bool = True,
         return_init_embeds: bool = True,

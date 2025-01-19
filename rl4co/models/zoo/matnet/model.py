@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch.nn as nn
 
 from rl4co.envs.common.base import RL4COEnvBase
@@ -24,7 +22,7 @@ class MatNet(POMO):
     def __init__(
         self,
         env: RL4COEnvBase,
-        policy: Union[nn.Module, MatNetPolicy] = None,
+        policy: nn.Module | MatNetPolicy = None,
         num_starts: int = None,
         policy_params: dict = {},
         **kwargs,

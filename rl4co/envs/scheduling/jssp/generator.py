@@ -1,7 +1,6 @@
 import os
 
 from functools import partial
-from typing import List
 
 import numpy as np
 import torch
@@ -18,7 +17,6 @@ log = get_pylogger(__name__)
 
 
 class JSSPGenerator(Generator):
-
     """Data generator for the Job-Shop Scheduling Problem (JSSP)
 
     Args:
@@ -184,7 +182,7 @@ class JSSPFileGenerator(Generator):
         self.max_ops_per_job = max_ops_per_job
         self.start_idx = 0
 
-    def _generate(self, batch_size: List[int]) -> TensorDict:
+    def _generate(self, batch_size: list[int]) -> TensorDict:
         batch_size = np.prod(batch_size)
         if batch_size > self.num_samples:
             log.warning(

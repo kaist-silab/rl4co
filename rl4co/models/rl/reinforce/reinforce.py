@@ -1,4 +1,4 @@
-from typing import IO, Any, Optional, Union, cast
+from typing import IO, Any, Optional, cast
 
 import torch
 import torch.nn as nn
@@ -34,7 +34,7 @@ class REINFORCE(RL4COLitModule):
         self,
         env: RL4COEnvBase,
         policy: nn.Module,
-        baseline: Union[REINFORCEBaseline, str] = "rollout",
+        baseline: REINFORCEBaseline | str = "rollout",
         baseline_kwargs: dict = {},
         reward_scale: str = None,
         **kwargs,
@@ -167,7 +167,7 @@ class REINFORCE(RL4COLitModule):
     @classmethod
     def load_from_checkpoint(
         cls,
-        checkpoint_path: Union[_PATH, IO],
+        checkpoint_path: _PATH | IO,
         map_location: _MAP_LOCATION_TYPE = None,
         hparams_file: Optional[_PATH] = None,
         strict: bool = False,
@@ -201,7 +201,9 @@ class REINFORCE(RL4COLitModule):
             loaded.setup()
             loaded.post_setup_hook()
             # load baseline state dict
-            state_dict = torch.load(checkpoint_path, map_location=map_location)["state_dict"]
+            state_dict = torch.load(checkpoint_path, map_location=map_location)[
+                "state_dict"
+            ]
             # get only baseline parameters
             state_dict = {k: v for k, v in state_dict.items() if "baseline" in k}
             state_dict = {k.replace("baseline.", "", 1): v for k, v in state_dict.items()}

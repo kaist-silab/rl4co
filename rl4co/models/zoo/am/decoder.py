@@ -1,5 +1,5 @@
 from dataclasses import dataclass, fields
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -22,7 +22,7 @@ log = get_pylogger(__name__)
 @dataclass
 class PrecomputedCache:
     node_embeddings: Tensor
-    graph_context: Union[Tensor, float]
+    graph_context: Tensor | float
     glimpse_key: Tensor
     glimpse_val: Tensor
     logit_key: Tensor

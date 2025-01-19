@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -15,8 +15,8 @@ from rl4co.utils.ops import gather_by_index
 
 @dataclass
 class PrecomputedCache:
-    node_embeddings: Union[Tensor, TensorDict]
-    graph_context: Union[Tensor, float]
+    node_embeddings: Tensor | TensorDict
+    graph_context: Tensor | float
     glimpse_key: Tensor
     glimpse_val: Tensor
     logit_key: Tensor

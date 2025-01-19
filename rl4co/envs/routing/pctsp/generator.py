@@ -1,4 +1,4 @@
-from typing import Callable, Union
+from typing import Callable
 
 from tensordict.tensordict import TensorDict
 from torch.distributions import Uniform
@@ -39,8 +39,8 @@ class PCTSPGenerator(Generator):
         num_loc: int = 20,
         min_loc: float = 0.0,
         max_loc: float = 1.0,
-        loc_distribution: Union[int, float, str, type, Callable] = Uniform,
-        depot_distribution: Union[int, float, str, type, Callable] = None,
+        loc_distribution: int | float | str | type | Callable = Uniform,
+        depot_distribution: int | float | str | type | Callable = None,
         penalty_factor: float = 3.0,
         prize_required: float = 1.0,
         **kwargs,
@@ -63,9 +63,11 @@ class PCTSPGenerator(Generator):
         if kwargs.get("depot_sampler", None) is not None:
             self.depot_sampler = kwargs["depot_sampler"]
         else:
-            self.depot_sampler = get_sampler(
-                "depot", depot_distribution, min_loc, max_loc, **kwargs
-            ) if depot_distribution is not None else None
+            self.depot_sampler = (
+                get_sampler("depot", depot_distribution, min_loc, max_loc, **kwargs)
+                if depot_distribution is not None
+                else None
+            )
 
         # Prize distribution
         self.deterministic_prize_sampler = get_sampler(
@@ -81,7 +83,7 @@ class PCTSPGenerator(Generator):
         # This means that the sum of penalties for all nodes will be approximately equal to the tour length (on average)
         # The expected total (uniform) penalty of half of the nodes (since approx half will be visited by the constraint)
         # is (n / 2) / 2 = n / 4 so divide by this means multiply by 4 / n,
-        # However instead of 4 we use penalty_factor (3 works well) so we can make them larger or smaller        
+        # However instead of 4 we use penalty_factor (3 works well) so we can make them larger or smaller
         self.max_penalty = kwargs.get("max_penalty", None)
         if self.max_penalty is None:  # If not provided, use the default max penalty
             self.max_penalty = MAX_LENGTHS.get(num_loc, None)
@@ -94,7 +96,7 @@ class PCTSPGenerator(Generator):
                 f"The max penalty for {num_loc} locations is not defined. Using the closest max penalty: {self.max_penalty}\
                     with {closest_num_loc} locations."
             )
-            
+
         # Adjust as in Kool et al. (2019)
         self.max_penalty *= penalty_factor / self.num_loc
         self.penalty_sampler = get_sampler(
@@ -118,18 +120,19 @@ class PCTSPGenerator(Generator):
         # Take uniform prizes
         # Now expectation is 0.5 so expected total prize is n / 2, we want to force to visit approximately half of the nodes
         # so the constraint will be that total prize >= (n / 2) / 2 = n / 4
-        # equivalently, we divide all prizes by n / 4 and the total prize should be >= 1        
+        # equivalently, we divide all prizes by n / 4 and the total prize should be >= 1
         deterministic_prize = self.deterministic_prize_sampler.sample(
             (*batch_size, self.num_loc)
         )
-        
+
         # In the deterministic setting, the stochastic_prize is not used and the deterministic prize is known
         # In the stochastic setting, the deterministic prize is the expected prize and is known up front but the
         # stochastic prize is only revealed once the node is visited
         # Stochastic prize is between (0, 2 * expected_prize) such that E(stochastic prize) = E(deterministic_prize)
-        stochastic_prize = self.stochastic_prize_sampler.sample(
-            (*batch_size, self.num_loc)
-        ) * deterministic_prize
+        stochastic_prize = (
+            self.stochastic_prize_sampler.sample((*batch_size, self.num_loc))
+            * deterministic_prize
+        )
 
         return TensorDict(
             {

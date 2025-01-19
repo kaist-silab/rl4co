@@ -3,8 +3,6 @@ import logging
 import os
 import sys
 
-from typing import List, Union
-
 import numpy as np
 
 from rl4co.data.utils import check_extension
@@ -20,7 +18,7 @@ DISTRIBUTIONS_PER_PROBLEM = {
     "op": ["const", "unif", "dist"],
     "mdpp": [None],
     "pdp": [None],
-    "atsp": [None]
+    "atsp": [None],
 }
 
 
@@ -213,29 +211,30 @@ def generate_mdpp_data(
         "action_mask": available.astype(bool),
     }
 
+
 def generate_atsp_data(dataset_size, atsp_size, tmat_class: bool = True):
     cost_matrix = np.random.uniform(size=(dataset_size, atsp_size, atsp_size))
     cost_matrix[..., np.arange(atsp_size), np.arange(atsp_size)] = 0
     if tmat_class:
         for i in range(atsp_size):
-            cost_matrix = np.minimum(cost_matrix, cost_matrix[..., :, [i]] + cost_matrix[..., [i], :])
-    return {
-        "cost_matrix": cost_matrix.astype(np.float32)
-    }
+            cost_matrix = np.minimum(
+                cost_matrix, cost_matrix[..., :, [i]] + cost_matrix[..., [i], :]
+            )
+    return {"cost_matrix": cost_matrix.astype(np.float32)}
 
 
 def generate_dataset(
-    filename: Union[str, List[str]] = None,
+    filename: str | list[str] | None = None,
     data_dir: str = "data",
-    name: str = None,
-    problem: Union[str, List[str]] = "all",
+    name: str | None = None,
+    problem: str | list[str] = "all",
     data_distribution: str = "all",
     dataset_size: int = 10000,
-    graph_sizes: Union[int, List[int]] = [20, 50, 100],
+    graph_sizes: int | list[int] = [20, 50, 100],
     overwrite: bool = False,
     seed: int = 1234,
     disable_warning: bool = True,
-    distributions_per_problem: Union[int, dict] = None,
+    distributions_per_problem: int | dict = None,
 ):
     """We keep a similar structure as in Kool et al. 2019 but save and load the data as npz
     This is way faster and more memory efficient than pickle and also allows for easy transfer to TensorDict
@@ -266,9 +265,11 @@ def generate_dataset(
         problems = distributions_per_problem
     else:
         problems = {
-            problem: distributions_per_problem[problem]
-            if data_distribution == "all"
-            else [data_distribution]
+            problem: (
+                distributions_per_problem[problem]
+                if data_distribution == "all"
+                else [data_distribution]
+            )
         }
 
     # Support multiple filenames if necessary
@@ -286,9 +287,11 @@ def generate_dataset(
                         datadir,
                         "{}{}{}_{}_seed{}.npz".format(
                             problem,
-                            "_{}".format(distribution)
-                            if distribution is not None
-                            else "",
+                            (
+                                "_{}".format(distribution)
+                                if distribution is not None
+                                else ""
+                            ),
                             graph_size,
                             name,
                             seed,

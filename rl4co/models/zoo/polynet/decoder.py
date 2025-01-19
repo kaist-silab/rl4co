@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch.nn as nn
 
@@ -18,7 +18,7 @@ log = get_pylogger(__name__)
 @dataclass
 class PrecomputedCache:
     node_embeddings: Tensor
-    graph_context: Union[Tensor, float]
+    graph_context: Tensor | float
     glimpse_key: Tensor
     glimpse_val: Tensor
     logit_key: Tensor
@@ -56,7 +56,7 @@ class PolyNetDecoder(AttentionModelDecoder):
         embed_dim: int = 128,
         poly_layer_dim: int = 256,
         num_heads: int = 8,
-        env_name: Union[str, RL4COEnvBase] = "tsp",
+        env_name: str | RL4COEnvBase = "tsp",
         context_embedding: nn.Module = None,
         dynamic_embedding: nn.Module = None,
         mask_inner: bool = True,

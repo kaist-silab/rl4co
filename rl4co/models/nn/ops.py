@@ -1,6 +1,6 @@
 import math
 
-from typing import Tuple, Union
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -19,8 +19,8 @@ class SkipConnection(nn.Module):
 
 class AdaptiveSequential(nn.Sequential):
     def forward(
-        self, *inputs: Union[Tuple[torch.Tensor], torch.Tensor]
-    ) -> Union[Tuple[torch.Tensor], torch.Tensor]:
+        self, *inputs: Tuple[torch.Tensor] | torch.Tensor
+    ) -> Tuple[torch.Tensor] | torch.Tensor:
         for module in self._modules.values():
             if type(inputs) == tuple:
                 inputs = module(*inputs)

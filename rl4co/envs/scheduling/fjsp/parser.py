@@ -2,13 +2,13 @@ import os
 
 from functools import partial
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import Tuple
 
 import torch
 
 from tensordict import TensorDict
 
-ProcessingData = List[Tuple[int, int]]
+ProcessingData = list[Tuple[int, int]]
 
 
 def list_files(path):
@@ -118,7 +118,7 @@ def read(loc: Path, max_ops=None):
     return td, num_jobs, num_machines, max_ops_per_job
 
 
-def file2lines(loc: Union[Path, str]) -> List[List[int]]:
+def file2lines(loc: Path | str) -> list[list[int]]:
     with open(loc, "r") as fh:
         lines = [line for line in fh.readlines() if line.strip()]
 
@@ -173,7 +173,7 @@ def write_one(args, where=None):
     return formatted
 
 
-def write(where: Union[Path, str], instances: TensorDict):
+def write(where: Path | str, instances: TensorDict):
     if not os.path.exists(where):
         os.makedirs(where)
 
