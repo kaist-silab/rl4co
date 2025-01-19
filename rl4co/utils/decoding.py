@@ -267,8 +267,8 @@ class DecodingStrategy(metaclass=abc.ABCMeta):
         self,
         logprobs: torch.Tensor,
         mask: torch.Tensor,
-        td: TensorDict,
-        action: torch.Tensor = None,
+        td: Optional[TensorDict] = None,
+        action: Optional[torch.Tensor] = None,
         **kwargs,
     ) -> Tuple[torch.Tensor, torch.Tensor, TensorDict]:
         """Main decoding operation. This method should be called in a loop until all sequences are done.
@@ -282,7 +282,7 @@ class DecodingStrategy(metaclass=abc.ABCMeta):
         raise NotImplementedError("Must be implemented by subclass")
 
     def pre_decoder_hook(
-        self, td: TensorDict, env: RL4COEnvBase, action: torch.Tensor = None
+        self, td: TensorDict, env: RL4COEnvBase, action: Optional[torch.Tensor] = None
     ):
         """Pre decoding hook. This method is called before the main decoding operation."""
 
@@ -291,13 +291,13 @@ class DecodingStrategy(metaclass=abc.ABCMeta):
             if self.num_starts is None:
                 self.num_starts = env.get_num_starts(td)
                 if self.multisample:
-                    log.warn(
+                    log.warning(
                         f"num_starts is not provided for sampling, using num_starts={self.num_starts}"
                     )
         else:
             if self.num_starts is not None:
                 if self.num_starts >= 1:
-                    log.warn(
+                    log.warning(
                         f"num_starts={self.num_starts} is ignored for decode_type={self.name}"
                     )
 
@@ -347,8 +347,8 @@ class DecodingStrategy(metaclass=abc.ABCMeta):
         self,
         logits: torch.Tensor,
         mask: torch.Tensor,
-        td: TensorDict = None,
-        action: torch.Tensor = None,
+        td: Optional[TensorDict] = None,
+        action: Optional[torch.Tensor] = None,
         **kwargs,
     ) -> TensorDict:
         """Main decoding operation. This method should be called in a loop until all sequences are done.
@@ -378,7 +378,9 @@ class DecodingStrategy(metaclass=abc.ABCMeta):
         # directly return for improvement methods, since the action for improvement methods is finalized in its own policy
         if self.improvement_method_mode:
             return logprobs, selected_action
+
         # for others
+        assert td is not None, "td must be provided"
         if not self.store_all_logp:
             logprobs = gather_by_index(logprobs, selected_action, dim=1)
         td.set("action", selected_action)

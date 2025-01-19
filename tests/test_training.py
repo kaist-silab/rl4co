@@ -201,14 +201,16 @@ def test_nargnn():
     "torch_geometric" not in sys.modules, reason="PyTorch Geometric not installed"
 )
 @pytest.mark.skipfif("numba" not in sys.modules, reason="Numba not installed")
-def test_deepaco():
+@pytest.mark.parametrize("use_local_search", [False])
+def test_deepaco(use_local_search):
     env = TSPEnv(generator_params=dict(num_loc=20))
     model = DeepACO(
         env,
         train_data_size=10,
         val_data_size=10,
         test_data_size=10,
-        policy_kwargs={"n_ants": 5},
+        train_with_local_search=use_local_search,
+        policy_kwargs={"n_ants": 5, "aco_kwargs": {"use_local_search": use_local_search}},
     )
     trainer = RL4COTrainer(
         max_epochs=1, gradient_clip_val=1, devices=1, accelerator=accelerator

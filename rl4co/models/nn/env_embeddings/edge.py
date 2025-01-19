@@ -26,11 +26,11 @@ def env_edge_embedding(env_name: str, config: dict) -> nn.Module:
     embedding_registry = {
         "tsp": TSPEdgeEmbedding,
         "atsp": ATSPEdgeEmbedding,
-        "cvrp": TSPEdgeEmbedding,
+        "cvrp": CVRPEdgeEmbedding,
         "sdvrp": TSPEdgeEmbedding,
-        "pctsp": TSPEdgeEmbedding,
+        "pctsp": CVRPEdgeEmbedding,
         "spctsp": TSPEdgeEmbedding,
-        "op": TSPEdgeEmbedding,
+        "op": CVRPEdgeEmbedding,
         "dpp": TSPEdgeEmbedding,
         "mdpp": TSPEdgeEmbedding,
         "pdp": TSPEdgeEmbedding,
@@ -93,12 +93,70 @@ class TSPEdgeEmbedding(nn.Module):
                 edge_index = get_full_graph_edge_index(
                     cost_matrix.shape[0], self_loop=False
                 ).to(cost_matrix.device)
-                edge_attr = cost_matrix[edge_index[0], edge_index[1]]
+                edge_attr = cost_matrix[edge_index[0], edge_index[1]].unsqueeze(-1)
 
             graph = Data(
-                x=init_embeddings[index],
-                edge_index=edge_index,
-                edge_attr=edge_attr,
+                x=init_embeddings[index], edge_index=edge_index, edge_attr=edge_attr
+            )
+            graph_data.append(graph)
+
+        batch = Batch.from_data_list(graph_data)
+        batch.edge_attr = self.edge_embed(batch.edge_attr)
+        return batch
+
+class CVRPEdgeEmbedding(TSPEdgeEmbedding):
+    """Edge embedding module for the Capacitated Vehicle Routing Problem (CVRP).
+    Unlike the TSP, all nodes in the CVRP should be connected to the depot,
+    so each node will have k_sparse + 1 edges. 
+    """
+
+    def _cost_matrix_to_graph(self, batch_cost_matrix: Tensor, init_embeddings: Tensor):
+        """Convert batched cost_matrix to batched PyG graph, and calculate edge embeddings.
+
+        Args:
+            batch_cost_matrix: Tensor of shape [batch_size, n, n]
+            init_embedding: init embeddings
+        """
+        graph_data = []
+        for index, cost_matrix in enumerate(batch_cost_matrix):
+            if self.sparsify:
+                edge_index, edge_attr = sparsify_graph(
+                    cost_matrix[1:, 1:], self.k_sparse, self_loop=False
+                )
+                edge_index = edge_index + 1  # because we removed the depot
+                # Note here
+                edge_index = torch.cat(
+                    [
+                        edge_index,
+                        # All nodes should be connected to the depot
+                        torch.stack(
+                            [
+                                torch.arange(1, cost_matrix.shape[0]),
+                                torch.zeros(cost_matrix.shape[0] - 1, dtype=torch.long),
+                            ]
+                        ).to(edge_index.device),
+                        # Depot should be connected to all nodes
+                        torch.stack(
+                            [
+                                torch.zeros(cost_matrix.shape[0] - 1, dtype=torch.long),
+                                torch.arange(1, cost_matrix.shape[0]),
+                            ]
+                        ).to(edge_index.device),
+                    ],
+                    dim=1,
+                )
+                edge_attr = torch.cat(
+                    [edge_attr, cost_matrix[1:, [0]], cost_matrix[[0], 1:].t()], dim=0
+                )
+
+            else:
+                edge_index = get_full_graph_edge_index(
+                    cost_matrix.shape[0], self_loop=False
+                ).to(cost_matrix.device)
+                edge_attr = cost_matrix[edge_index[0], edge_index[1]].unsqueeze(-1)
+
+            graph = Data(
+                x=init_embeddings[index], edge_index=edge_index, edge_attr=edge_attr
             )
             graph_data.append(graph)
 

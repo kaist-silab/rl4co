@@ -80,8 +80,15 @@ class EdgeHeatmapGenerator(nn.Module):
         # if self.undirected_graph:
         #     heatmap = (heatmap + heatmap.transpose(1, 2)) * 0.5
 
-        heatmap += 1e-10 if heatmap.dtype != torch.float16 else 3e-8
-        # 3e-8 is the smallest positive number such that log(3e-8) is not -inf
+        # Avoid log(0) by adding a small value
+        if heatmap.dtype == torch.float32 or heatmap.dtype == torch.bfloat16:
+            small_value = 1e-12
+        elif heatmap.dtype == torch.float16:
+            small_value = 3e-8  # the smallest positive number such that log(small_value) is not -inf
+        else:
+            raise ValueError(f"Unsupported dtype: {heatmap.dtype}")
+
+        heatmap += small_value
         heatmap_logits = torch.log(heatmap)
 
         return heatmap_logits

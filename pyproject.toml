@@ -80,6 +80,7 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+
 graph = ["torch_geometric"]
 routing = [
     "numba>=0.58.1",

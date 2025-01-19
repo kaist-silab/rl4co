@@ -58,7 +58,7 @@ class ConstructiveDecoder(nn.Module, metaclass=abc.ABCMeta):
 
     def pre_decoder_hook(
         self, td: TensorDict, env: RL4COEnvBase, hidden: Any = None, num_starts: int = 0
-    ) -> Tuple[TensorDict, Any, RL4COEnvBase]:
+    ) -> Tuple[TensorDict, RL4COEnvBase, Any]:
         """By default, we don't need to do anything here.
 
         Args:
@@ -68,7 +68,7 @@ class ConstructiveDecoder(nn.Module, metaclass=abc.ABCMeta):
             num_starts: Number of starts for multistart decoding
 
         Returns:
-            Tuple containing the updated hidden state, TensorDict, and environment
+            Tuple containing the updated Tensordict, environment, and hidden state
         """
         return td, env, hidden
 

@@ -14,8 +14,7 @@ from .generator import CVRPGenerator
 
 try:
     from .local_search import local_search
-except Exception:
-    # In case some dependencies are not installed (e.g., pyvrp)
+except:  # In case when we fail to build HGS
     local_search = None
 from .render import render
 
@@ -133,7 +132,7 @@ class CVRPEnv(RL4COEnvBase):
     @staticmethod
     def get_action_mask(td: TensorDict) -> torch.Tensor:
         # For demand steps_dim is inserted by indexing with id, for used_capacity insert node dim for broadcasting
-        exceeds_cap = td["demand"] + td["used_capacity"] > td["vehicle_capacity"]
+        exceeds_cap = td["demand"] + td["used_capacity"] > td["vehicle_capacity"] + 1e-5
 
         # Nodes that cannot be visited are already visited or too much demand to be served now
         mask_loc = td["visited"][..., 1:].to(exceeds_cap.dtype) | exceeds_cap
@@ -182,7 +181,7 @@ class CVRPEnv(RL4COEnvBase):
             # Cannot use less than 0
             used_cap[used_cap < 0] = 0
             assert (
-                used_cap <= td["vehicle_capacity"] + 1e-5
+                used_cap <= td["vehicle_capacity"][:, 0] + 1e-5
             ).all(), "Used more than capacity"
 
     @staticmethod
@@ -257,7 +256,7 @@ class CVRPEnv(RL4COEnvBase):
     def local_search(td: TensorDict, actions: torch.Tensor, **kwargs) -> torch.Tensor:
         assert (
             local_search is not None
-        ), "Cannot import local_search module. Check if `pyvrp` is installed."
+        ), "Cannot import local_search module. Check if HGS is built."
         return local_search(td, actions, **kwargs)
 
     @staticmethod
