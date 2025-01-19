@@ -1,6 +1,5 @@
 from functools import partial
-from typing import Optional, Type, Union
-import math
+from typing import Optional, Type
 
 from tensordict import TensorDict
 import torch
@@ -50,8 +49,8 @@ class GFACSPolicy(DeepACOPolicy):
         aco_class: Optional[Type[AntSystem]] = None,
         aco_kwargs: dict = {},
         train_with_local_search: bool = True,
-        n_ants: Optional[Union[int, dict]] = None,
-        n_iterations: Optional[Union[int, dict]] = None,
+        n_ants: Optional[int | dict] = None,
+        n_iterations: Optional[int | dict] = None,
         **encoder_kwargs,
     ):
         if encoder is None:
@@ -74,7 +73,7 @@ class GFACSPolicy(DeepACOPolicy):
     def forward(
         self,
         td_initial: TensorDict,
-        env: Optional[Union[str, RL4COEnvBase]] = None,
+        env: Optional[str | RL4COEnvBase] = None,
         phase: str = "train",
         return_actions: bool = True,
         return_hidden: bool = False,
@@ -87,7 +86,9 @@ class GFACSPolicy(DeepACOPolicy):
         """
         n_ants = self.n_ants[phase]
         # Instantiate environment if needed
-        if (phase != "train" or self.train_with_local_search) and (env is None or isinstance(env, str)):
+        if (phase != "train" or self.train_with_local_search) and (
+            env is None or isinstance(env, str)
+        ):
             env_name = self.env_name if env is None else env
             env = get_env(env_name)
         else:
@@ -102,7 +103,8 @@ class GFACSPolicy(DeepACOPolicy):
                 logZ = logZ[:, [0]]
 
             select_start_nodes_fn = partial(
-                self.aco_class.select_start_node_fn, start_node=self.aco_kwargs.get("start_node", None)
+                self.aco_class.select_start_node_fn,
+                start_node=self.aco_kwargs.get("start_node", None),
             )
             decoding_kwargs.update(
                 {
@@ -113,7 +115,13 @@ class GFACSPolicy(DeepACOPolicy):
                 }
             )
             logprobs, actions, td, env = self.common_decoding(
-                "multistart_sampling", td_initial, env, hidden, n_ants, actions, **decoding_kwargs
+                "multistart_sampling",
+                td_initial,
+                env,
+                hidden,
+                n_ants,
+                actions,
+                **decoding_kwargs,
             )
             td.set("reward", env.get_reward(td, actions))
 
@@ -122,7 +130,8 @@ class GFACSPolicy(DeepACOPolicy):
                 "logZ": logZ,
                 "reward": unbatchify(td["reward"], n_ants),
                 "log_likelihood": unbatchify(
-                    get_log_likelihood(logprobs, actions, td.get("mask", None), True), n_ants
+                    get_log_likelihood(logprobs, actions, td.get("mask", None), True),
+                    n_ants,
                 )
             }
 
@@ -138,7 +147,13 @@ class GFACSPolicy(DeepACOPolicy):
                     batchify(td_initial, n_ants), env, actions  # type:ignore
                 )
                 ls_logprobs, ls_actions, td, env = self.common_decoding(
-                    "evaluate", td_initial, env, hidden, n_ants, ls_actions, **decoding_kwargs
+                    "evaluate",
+                    td_initial,
+                    env,
+                    hidden,
+                    n_ants,
+                    ls_actions,
+                    **decoding_kwargs,
                 )
                 td.set("ls_reward", ls_reward)
                 outdict.update(
@@ -146,7 +161,9 @@ class GFACSPolicy(DeepACOPolicy):
                         "ls_logZ": ls_logZ,
                         "ls_reward": unbatchify(ls_reward, n_ants),
                         "ls_log_likelihood": unbatchify(
-                            get_log_likelihood(ls_logprobs, ls_actions, td.get("mask", None), True),
+                            get_log_likelihood(
+                                ls_logprobs, ls_actions, td.get("mask", None), True
+                            ),
                             n_ants,
                         )
                     }

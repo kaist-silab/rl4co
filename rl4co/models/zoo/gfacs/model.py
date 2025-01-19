@@ -1,6 +1,6 @@
 import math
 
-from typing import Optional, Union
+from typing import Optional
 
 import numpy as np
 import scipy
@@ -33,7 +33,7 @@ class GFACS(DeepACO):
         self,
         env: RL4COEnvBase,
         policy: Optional[GFACSPolicy] = None,
-        baseline: Union[REINFORCEBaseline, str] = "no",
+        baseline: REINFORCEBaseline | str = "no",
         train_with_local_search: bool = True,
         ls_reward_aug_W: float = 0.95,
         policy_kwargs: dict = {},
